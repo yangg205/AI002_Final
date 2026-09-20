@@ -1,0 +1,205 @@
+{"id": "risk-0001", "kind": "risk", "label": "risk", "split": "train", "text": "ước gì sáng mai mình biến mất mà chẳng ai nhận ra"}
+{"id": "risk-0002", "kind": "risk", "label": "risk", "split": "train", "text": "nhiều lúc chỉ muốn tan ra thành không khí cho nhẹ đầu"}
+{"id": "risk-0003", "kind": "risk", "label": "risk", "split": "train", "text": "giá như mình chưa từng có mặt trên đời này"}
+{"id": "risk-0004", "kind": "risk", "label": "risk", "split": "dev", "text": "chỉ mong một ngày tỉnh dậy thấy mình không còn ở đây nữa"}
+{"id": "risk-0005", "kind": "risk", "label": "risk", "split": "train", "text": "ước gì có nút xoá để xoá luôn sự tồn tại của mình"}
+{"id": "risk-0006", "kind": "risk", "label": "risk", "split": "train", "text": "chỉ ước được ngủ một giấc thật dài rồi không phải dậy nữa"}
+{"id": "risk-0007", "kind": "risk", "label": "risk", "split": "train", "text": "mình mong đêm nay nhắm mắt là hết, khỏi phải mở mắt ra"}
+{"id": "risk-0008", "kind": "risk", "label": "risk", "split": "dev", "text": "nằm xuống mà thầm mong sáng mai đừng tỉnh lại"}
+{"id": "risk-0009", "kind": "risk", "label": "risk", "split": "train", "text": "ngủ mãi không dậy chắc là dễ chịu nhất"}
+{"id": "risk-0010", "kind": "risk", "label": "risk", "split": "train", "text": "chắc mình sẽ đi một chuyến thật xa và không có ngày về"}
+{"id": "risk-0011", "kind": "risk", "label": "risk", "split": "train", "text": "mình tính đi đâu đó thật lâu, kiểu không ai tìm được nữa"}
+{"id": "risk-0012", "kind": "risk", "label": "risk", "split": "dev", "text": "sắp tới mình rời đi hẳn, mọi người đừng đợi mình nữa"}
+{"id": "risk-0013", "kind": "risk", "label": "risk", "split": "train", "text": "đi một chuyến mà không cần mang gì theo, cũng không cần quay lại"}
+{"id": "risk-0014", "kind": "risk", "label": "risk", "split": "train", "text": "mình chẳng còn lý do nào để tiếp tục nữa"}
+{"id": "risk-0015", "kind": "risk", "label": "risk", "split": "train", "text": "sống tiếp để làm gì khi mọi thứ đều vô nghĩa"}
+{"id": "risk-0016", "kind": "risk", "label": "risk", "split": "dev", "text": "mình không thấy điểm nào đáng để cố thêm một ngày nào nữa"}
+{"id": "risk-0017", "kind": "risk", "label": "risk", "split": "train", "text": "mình muốn dừng hẳn, không phải nghỉ ngơi mà là dừng lại mãi mãi"}
+{"id": "risk-0018", "kind": "risk", "label": "risk", "split": "train", "text": "ngày nào cũng trôi qua mà chẳng còn gì giữ mình lại"}
+{"id": "risk-0019", "kind": "risk", "label": "risk", "split": "train", "text": "không có mình chắc mọi người sẽ nhẹ nhõm hơn nhiều"}
+{"id": "risk-0020", "kind": "risk", "label": "risk", "split": "dev", "text": "mình chỉ làm khổ những người xung quanh thôi"}
+{"id": "risk-0021", "kind": "risk", "label": "risk", "split": "train", "text": "bố mẹ sẽ đỡ vất vả biết bao nếu không phải lo cho mình"}
+{"id": "risk-0022", "kind": "risk", "label": "risk", "split": "train", "text": "mình là phần thừa trong nhà này"}
+{"id": "risk-0023", "kind": "risk", "label": "risk", "split": "train", "text": "mọi người sẽ ổn hơn khi mình không còn ở đó"}
+{"id": "risk-0024", "kind": "risk", "label": "risk", "split": "train", "text": "mình đang dọn lại hết đồ đạc và cho đi những thứ mình quý"}
+{"id": "risk-0025", "kind": "risk", "label": "risk", "split": "dev", "text": "mình vừa nhắn cho từng người một lời cảm ơn cuối cùng"}
+{"id": "risk-0026", "kind": "risk", "label": "risk", "split": "train", "text": "mình đã viết sẵn vài dòng để lại cho gia đình"}
+{"id": "risk-0027", "kind": "risk", "label": "risk", "split": "train", "text": "mình sắp xếp xong mọi việc rồi, thấy nhẹ cả người"}
+{"id": "risk-0028", "kind": "risk", "label": "risk", "split": "train", "text": "mình gửi lại con chó cho bạn thân, nó sẽ được chăm tốt hơn"}
+{"id": "risk-0029", "kind": "risk", "label": "risk", "split": "dev", "text": "mình đã trả hết những gì cần trả, giờ không còn vướng bận gì"}
+{"id": "risk-0030", "kind": "risk", "label": "risk", "split": "train", "text": "có cách nào để kết thúc mà không đau đớn không"}
+{"id": "risk-0031", "kind": "risk", "label": "risk", "split": "train", "text": "bao nhiêu là đủ để không tỉnh lại nữa"}
+{"id": "risk-0032", "kind": "risk", "label": "risk", "split": "train", "text": "làm sao để mọi thứ dừng lại nhanh nhất"}
+{"id": "risk-0033", "kind": "risk", "label": "risk", "split": "dev", "text": "nếu muốn ra đi thì nên chuẩn bị những gì trước"}
+{"id": "risk-0034", "kind": "risk", "label": "risk", "split": "train", "text": "mỗi lần quá tải mình lại làm mình bị thương cho dễ chịu"}
+{"id": "risk-0035", "kind": "risk", "label": "risk", "split": "train", "text": "mình hay cào tay đến chảy máu rồi mới thấy bình tĩnh"}
+{"id": "risk-0036", "kind": "risk", "label": "risk", "split": "train", "text": "đau thể xác làm mình quên được đau trong lòng"}
+{"id": "risk-0037", "kind": "risk", "label": "risk", "split": "dev", "text": "mình lại để lại vết trên cổ tay đêm qua"}
+{"id": "risk-0038", "kind": "risk", "label": "risk", "split": "train", "text": "mình tự phạt mình bằng cách làm đau chính mình"}
+{"id": "risk-0039", "kind": "risk", "label": "risk", "split": "train", "text": "mình hay đùa là chắc sống không quá năm nay, mà thật ra mình nghĩ thật"}
+{"id": "risk-0040", "kind": "risk", "label": "risk", "split": "train", "text": "bạn bè tưởng mình nói giỡn khi bảo sắp biến mất"}
+{"id": "risk-0041", "kind": "risk", "label": "risk", "split": "dev", "text": "nói ra thì nghe như đùa, mà mình tính thật rồi"}
+{"id": "risk-0042", "kind": "risk", "label": "risk", "split": "train", "text": "mình hay nói vui là chào mọi người lần cuối"}
+{"id": "risk-0043", "kind": "risk", "label": "risk", "split": "train", "text": "mình hay tưởng tượng đám tang của mình sẽ có ai đến"}
+{"id": "risk-0044", "kind": "risk", "label": "risk", "split": "train", "text": "không biết bố mẹ sẽ khóc bao lâu nếu mình không còn"}
+{"id": "risk-0045", "kind": "risk", "label": "risk", "split": "dev", "text": "chắc chỉ vài tháng là ai cũng quên mình thôi"}
+{"id": "risk-0046", "kind": "risk", "label": "risk", "split": "train", "text": "mệt qá r, mún buông hết cho xong"}
+{"id": "risk-0047", "kind": "risk", "label": "risk", "split": "train", "text": "ko còn thiết sống nx"}
+{"id": "risk-0048", "kind": "risk", "label": "risk", "split": "train", "text": "mk chán đời lắm r, mún đi luôn"}
+{"id": "risk-0049", "kind": "risk", "label": "risk", "split": "dev", "text": "chả còn lý do j để ở lại"}
+{"id": "risk-0050", "kind": "risk", "label": "risk", "split": "train", "text": "t mún kết thúc mọi thứ ngay bh"}
+{"id": "risk-0051", "kind": "risk", "label": "risk", "split": "train", "text": "hnay t thấy mún nghỉ hẳn luôn"}
+{"id": "risk-0052", "kind": "risk", "label": "risk", "split": "train", "text": "mình đã chịu đựng nhiều năm và giờ thì hết sức rồi"}
+{"id": "risk-0053", "kind": "risk", "label": "risk", "split": "dev", "text": "cố mãi mà chẳng thay đổi gì, mình muốn dừng lại"}
+{"id": "risk-0054", "kind": "risk", "label": "risk", "split": "train", "text": "mọi cánh cửa đều đóng, mình không đi tiếp được nữa"}
+{"id": "risk-0055", "kind": "risk", "label": "risk", "split": "train", "text": "mình kiệt sức tới mức không còn thấy đường ra"}
+{"id": "risk-0056", "kind": "risk", "label": "risk", "split": "train", "text": "chẳng ai nhận ra mình đang chìm, mà mình cũng hết muốn nói"}
+{"id": "risk-0057", "kind": "risk", "label": "risk", "split": "dev", "text": "mình ngồi giữa đám đông mà thấy như đã rời đi từ lâu"}
+{"id": "risk-0058", "kind": "risk", "label": "risk", "split": "train", "text": "mình thấy mình đang biến mất dần mỗi ngày một chút"}
+{"id": "risk-0059", "kind": "risk", "label": "risk", "split": "train", "text": "mình đã chọn xong ngày rồi, chỉ chờ tới đó thôi"}
+{"id": "risk-0060", "kind": "risk", "label": "risk", "split": "dev", "text": "chỉ còn vài hôm nữa là mình không phải chịu đựng gì nữa"}
+{"id": "risk-0061", "kind": "risk", "label": "safe", "split": "train", "text": "bài tập nhiều muốn xỉu luôn á"}
+{"id": "risk-0062", "kind": "risk", "label": "safe", "split": "train", "text": "đói meo cả ruột, muốn chết đói tới nơi rồi"}
+{"id": "risk-0063", "kind": "risk", "label": "safe", "split": "train", "text": "cười muốn rụng rốn luôn"}
+{"id": "risk-0064", "kind": "risk", "label": "safe", "split": "dev", "text": "nóng muốn bốc hơi luôn trời ơi"}
+{"id": "risk-0065", "kind": "risk", "label": "safe", "split": "train", "text": "chờ lâu muốn mọc rễ luôn"}
+{"id": "risk-0066", "kind": "risk", "label": "safe", "split": "train", "text": "sợ muốn tắt thở khi xem phim kinh dị"}
+{"id": "risk-0067", "kind": "risk", "label": "safe", "split": "train", "text": "deadline dí muốn tắt điện luôn"}
+{"id": "risk-0068", "kind": "risk", "label": "safe", "split": "dev", "text": "mệt rã rời, muốn ngủ luôn ba ngày"}
+{"id": "risk-0069", "kind": "risk", "label": "safe", "split": "train", "text": "nghe tin mà muốn xỉu ngang"}
+{"id": "risk-0070", "kind": "risk", "label": "safe", "split": "train", "text": "buồn cười muốn chết với mấy đứa bạn"}
+{"id": "risk-0071", "kind": "risk", "label": "safe", "split": "train", "text": "kỳ này mình học nặng quá, lúc nào cũng thấy căng"}
+{"id": "risk-0072", "kind": "risk", "label": "safe", "split": "dev", "text": "thi cử dồn dập làm mình lo lắng suốt tuần"}
+{"id": "risk-0073", "kind": "risk", "label": "safe", "split": "train", "text": "mình sợ trượt môn nên tối nào cũng thức khuya"}
+{"id": "risk-0074", "kind": "risk", "label": "safe", "split": "train", "text": "điểm thấp làm mình buồn mấy hôm nay"}
+{"id": "risk-0075", "kind": "risk", "label": "safe", "split": "train", "text": "mình lo không kịp nộp đồ án đúng hạn"}
+{"id": "risk-0076", "kind": "risk", "label": "safe", "split": "train", "text": "sếp giao thêm việc mà mình chưa biết xoay sao"}
+{"id": "risk-0077", "kind": "risk", "label": "safe", "split": "dev", "text": "công việc dạo này cuốn đến mức không có thời gian thở"}
+{"id": "risk-0078", "kind": "risk", "label": "safe", "split": "train", "text": "mình vừa bị nhắc nhở ở công ty, thấy nản"}
+{"id": "risk-0079", "kind": "risk", "label": "safe", "split": "train", "text": "lương chưa về mà hoá đơn thì tới rồi"}
+{"id": "risk-0080", "kind": "risk", "label": "safe", "split": "train", "text": "họp liên tục cả ngày làm mình kiệt sức"}
+{"id": "risk-0081", "kind": "risk", "label": "safe", "split": "dev", "text": "mấy đêm nay mình khó ngủ, cứ trằn trọc mãi"}
+{"id": "risk-0082", "kind": "risk", "label": "safe", "split": "train", "text": "mình ngủ ít nên ban ngày uể oải"}
+{"id": "risk-0083", "kind": "risk", "label": "safe", "split": "train", "text": "tối qua mình thức tới sáng vì suy nghĩ lung tung"}
+{"id": "risk-0084", "kind": "risk", "label": "safe", "split": "train", "text": "tối nào cũng trằn trọc, mình muốn ngủ sâu hơn"}
+{"id": "risk-0085", "kind": "risk", "label": "safe", "split": "train", "text": "mình cần ngủ đủ giấc hơn để hôm sau còn tỉnh táo đi làm"}
+{"id": "risk-0086", "kind": "risk", "label": "safe", "split": "train", "text": "khi thấy bứt rứt trong người thì nên làm gì cho dịu lại"}
+{"id": "risk-0087", "kind": "risk", "label": "safe", "split": "dev", "text": "cảm xúc khó chịu thì nên né tránh hay nên đối diện"}
+{"id": "risk-0088", "kind": "risk", "label": "safe", "split": "train", "text": "mình vừa chia tay, thấy trống trải lắm"}
+{"id": "risk-0089", "kind": "risk", "label": "safe", "split": "train", "text": "người yêu cũ nhắn tin làm mình buồn cả ngày"}
+{"id": "risk-0090", "kind": "risk", "label": "safe", "split": "dev", "text": "mình nhớ người đó nhưng biết là nên dừng"}
+{"id": "risk-0091", "kind": "risk", "label": "safe", "split": "train", "text": "chỉ mình một bài tập để bớt lo trước giờ thi với"}
+{"id": "risk-0092", "kind": "risk", "label": "safe", "split": "train", "text": "khi hoảng loạn thì nên làm gì đầu tiên"}
+{"id": "risk-0093", "kind": "risk", "label": "safe", "split": "train", "text": "có bài tập nào giúp mình bớt tự trách không"}
+{"id": "risk-0094", "kind": "risk", "label": "safe", "split": "dev", "text": "mình hay nghĩ đi nghĩ lại một chuyện, có cách nào dừng không"}
+{"id": "risk-0095", "kind": "risk", "label": "safe", "split": "train", "text": "mình cần cách hít thở để dịu lại trước buổi phỏng vấn"}
+{"id": "risk-0096", "kind": "risk", "label": "safe", "split": "train", "text": "mình muốn bắt đầu bằng một việc rất nhỏ trong hôm nay"}
+{"id": "risk-0097", "kind": "risk", "label": "safe", "split": "train", "text": "app này lưu lại tin nhắn của mình không"}
+{"id": "risk-0098", "kind": "risk", "label": "safe", "split": "dev", "text": "bạn có phải người thật không"}
+{"id": "risk-0099", "kind": "risk", "label": "safe", "split": "train", "text": "mình dùng cái này có mất phí không"}
+{"id": "risk-0100", "kind": "risk", "label": "safe", "split": "train", "text": "công cụ này dùng để làm gì"}
+{"id": "risk-0101", "kind": "risk", "label": "safe", "split": "train", "text": "chào bạn, mình mới vào thử"}
+{"id": "risk-0102", "kind": "risk", "label": "safe", "split": "train", "text": "cảm ơn bạn nhiều nhé"}
+{"id": "risk-0103", "kind": "risk", "label": "safe", "split": "dev", "text": "ừ mình hiểu rồi, để mình thử xem"}
+{"id": "risk-0104", "kind": "risk", "label": "safe", "split": "train", "text": "hôm nay mình ổn, chỉ ghé qua chút"}
+{"id": "risk-0105", "kind": "risk", "label": "safe", "split": "train", "text": "asdkjahsd"}
+{"id": "risk-0106", "kind": "risk", "label": "safe", "split": "train", "text": "test 123 abc xyz"}
+{"id": "risk-0107", "kind": "risk", "label": "safe", "split": "dev", "text": "??? test thử"}
+{"id": "risk-0108", "kind": "risk", "label": "safe", "split": "train", "text": "aaaaaaaa"}
+{"id": "risk-0109", "kind": "risk", "label": "safe", "split": "train", "text": "cứ từ từ rồi mọi chuyện sẽ ổn"}
+{"id": "risk-0110", "kind": "risk", "label": "safe", "split": "train", "text": "làm từ từ thôi, đừng vội quá"}
+{"id": "risk-0111", "kind": "risk", "label": "safe", "split": "dev", "text": "mình đang học cách tự lập hơn"}
+{"id": "risk-0112", "kind": "risk", "label": "safe", "split": "train", "text": "bạn tự tin lên, cố gắng nhé"}
+{"id": "risk-0113", "kind": "risk", "label": "safe", "split": "train", "text": "tử tế với người khác cũng là tử tế với mình"}
+{"id": "risk-0114", "kind": "risk", "label": "safe", "split": "train", "text": "mình không muốn sống chung với người lạ nữa"}
+{"id": "risk-0115", "kind": "risk", "label": "safe", "split": "dev", "text": "mình không muốn sống phụ thuộc vào bố mẹ nữa"}
+{"id": "risk-0116", "kind": "risk", "label": "safe", "split": "train", "text": "anh ấy không muốn sống như hồi còn trẻ nữa"}
+{"id": "risk-0117", "kind": "risk", "label": "safe", "split": "train", "text": "mình đang làm bài tập lớn về sức khoẻ tinh thần học đường"}
+{"id": "risk-0118", "kind": "risk", "label": "safe", "split": "train", "text": "lớp mình thuyết trình về chủ đề hỗ trợ tâm lý cho sinh viên"}
+{"id": "risk-0119", "kind": "risk", "label": "safe", "split": "dev", "text": "mình đọc một cuốn sách viết về cách vượt qua khủng hoảng"}
+{"id": "risk-0120", "kind": "risk", "label": "safe", "split": "train", "text": "bạn mình dạo này buồn, mình không biết nói gì với bạn ấy"}
+{"id": "risk-0121", "kind": "risk", "label": "safe", "split": "train", "text": "em trai mình hay cáu gắt, chắc do áp lực thi"}
+{"id": "risk-0122", "kind": "risk", "label": "safe", "split": "dev", "text": "mình vừa nhận được học bổng, vui quá trời"}
+{"id": "risk-0123", "kind": "risk", "label": "safe", "split": "train", "text": "hôm nay mình chạy bộ xong thấy người nhẹ hẳn"}
+{"id": "risk-0124", "kind": "risk", "label": "safe", "split": "train", "text": "cuối tuần này mình về quê, mong quá"}
+{"id": "intent-0001", "kind": "intent", "label": "advice", "split": "train", "text": "mình cần một cách để bớt run trước khi lên thuyết trình"}
+{"id": "intent-0002", "kind": "intent", "label": "advice", "split": "train", "text": "có bài tập nào ngắn làm được ngay trong lớp không"}
+{"id": "intent-0003", "kind": "intent", "label": "advice", "split": "train", "text": "chỉ mình cách kéo bản thân về hiện tại khi đầu óc trôi đi"}
+{"id": "intent-0004", "kind": "intent", "label": "advice", "split": "dev", "text": "mình muốn biết làm sao để bớt bấn loạn khi nhận tin xấu"}
+{"id": "intent-0005", "kind": "intent", "label": "advice", "split": "train", "text": "hướng dẫn mình một kỹ năng đơn giản làm buổi tối"}
+{"id": "intent-0006", "kind": "intent", "label": "advice", "split": "train", "text": "làm thế nào để không bị cuốn vào vòng lo lắng"}
+{"id": "intent-0007", "kind": "intent", "label": "advice", "split": "train", "text": "mình nên làm gì khi thấy ngực nặng vì căng thẳng"}
+{"id": "intent-0008", "kind": "intent", "label": "advice", "split": "dev", "text": "cách nào giúp mình dừng việc tự phê bình liên tục"}
+{"id": "intent-0009", "kind": "intent", "label": "advice", "split": "train", "text": "mình muốn học cách ở yên với cảm xúc khó chịu"}
+{"id": "intent-0010", "kind": "intent", "label": "advice", "split": "train", "text": "có kỹ thuật nào giúp mình tập trung lại sau cơn lo không"}
+{"id": "intent-0011", "kind": "intent", "label": "advice", "split": "train", "text": "chỉ mình cách đặt một hành động nhỏ theo điều mình coi trọng"}
+{"id": "intent-0012", "kind": "intent", "label": "advice", "split": "dev", "text": "mình muốn thử một bài tập kéo dài năm phút thôi"}
+{"id": "intent-0013", "kind": "intent", "label": "advice", "split": "train", "text": "khi tay chân run thì nên làm gì trước"}
+{"id": "intent-0014", "kind": "intent", "label": "advice", "split": "train", "text": "làm sao để bớt nghĩ về lỗi sai hôm qua"}
+{"id": "intent-0015", "kind": "intent", "label": "advice", "split": "train", "text": "bày mình cách dịu lại sau khi cãi nhau xong"}
+{"id": "intent-0016", "kind": "intent", "label": "advice", "split": "dev", "text": "mình cần cách nào đó để ngủ dễ hơn mà không dùng thuốc"}
+{"id": "intent-0017", "kind": "intent", "label": "advice", "split": "train", "text": "mình muốn biết cách tách mình khỏi suy nghĩ tiêu cực"}
+{"id": "intent-0018", "kind": "intent", "label": "advice", "split": "train", "text": "chỉ giúp mình một cách để bình tĩnh trong một phút"}
+{"id": "intent-0019", "kind": "intent", "label": "advice", "split": "train", "text": "có cách nào luyện lòng tốt với bản thân mỗi ngày không"}
+{"id": "intent-0020", "kind": "intent", "label": "advice", "split": "dev", "text": "mình muốn tập một thói quen nhỏ giúp bớt căng"}
+{"id": "intent-0021", "kind": "intent", "label": "advice", "split": "train", "text": "làm sao quay lại làm việc sau khi mất tập trung vì lo"}
+{"id": "intent-0022", "kind": "intent", "label": "advice", "split": "train", "text": "mình nên bắt đầu từ kỹ năng nào trước"}
+{"id": "intent-0023", "kind": "intent", "label": "advice", "split": "train", "text": "mình muốn biết cách nhận ra cảm xúc đang diễn ra trong người"}
+{"id": "intent-0024", "kind": "intent", "label": "advice", "split": "dev", "text": "có cách nào để bớt căng khi ngồi trong phòng họp không"}
+{"id": "intent-0025", "kind": "intent", "label": "advice", "split": "train", "text": "mình muốn một bài tập làm được lúc đang đi bộ"}
+{"id": "intent-0026", "kind": "intent", "label": "advice", "split": "train", "text": "chỉ mình cách thả lỏng vai và hàm khi căng cứng"}
+{"id": "intent-0027", "kind": "intent", "label": "advice", "split": "train", "text": "làm sao để không phản ứng gay gắt khi bị chỉ trích"}
+{"id": "intent-0028", "kind": "intent", "label": "advice", "split": "dev", "text": "mình cần cách để không bỏ cuộc giữa chừng"}
+{"id": "intent-0029", "kind": "intent", "label": "advice", "split": "train", "text": "mình muốn học cách quay lại với việc mình quan tâm"}
+{"id": "intent-0030", "kind": "intent", "label": "advice", "split": "train", "text": "có kỹ năng nào dùng được khi đang đi xe buýt không"}
+{"id": "intent-0031", "kind": "intent", "label": "sharing", "split": "train", "text": "hôm nay mình làm xong bài, thấy nhẹ người"}
+{"id": "intent-0032", "kind": "intent", "label": "sharing", "split": "train", "text": "mình vừa bị mẹ mắng, buồn ghê"}
+{"id": "intent-0033", "kind": "intent", "label": "sharing", "split": "train", "text": "dạo này mình hay thấy trống rỗng"}
+{"id": "intent-0034", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình mới chuyển chỗ ở, chưa quen lắm"}
+{"id": "intent-0035", "kind": "intent", "label": "sharing", "split": "train", "text": "công việc ổn hơn tuần trước rồi"}
+{"id": "intent-0036", "kind": "intent", "label": "sharing", "split": "train", "text": "mình cãi nhau với bạn cùng phòng"}
+{"id": "intent-0037", "kind": "intent", "label": "sharing", "split": "train", "text": "hôm nay trời mưa, tự nhiên thấy chùng xuống"}
+{"id": "intent-0038", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình vừa được khen, vui thật"}
+{"id": "intent-0039", "kind": "intent", "label": "sharing", "split": "train", "text": "mình thấy mệt mà không rõ vì sao"}
+{"id": "intent-0040", "kind": "intent", "label": "sharing", "split": "train", "text": "mình nhớ hồi cấp ba ghê"}
+{"id": "intent-0041", "kind": "intent", "label": "sharing", "split": "train", "text": "dạo này mình ít nói chuyện với ai"}
+{"id": "intent-0042", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình vừa trượt phỏng vấn, hơi hụt hẫng"}
+{"id": "intent-0043", "kind": "intent", "label": "sharing", "split": "train", "text": "mình đang tập chạy bộ, thấy khá hơn"}
+{"id": "intent-0044", "kind": "intent", "label": "sharing", "split": "train", "text": "mình thấy tủi thân khi bị bỏ qua trong nhóm"}
+{"id": "intent-0045", "kind": "intent", "label": "sharing", "split": "train", "text": "hôm nay mình chỉ muốn kể vậy thôi"}
+{"id": "intent-0046", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình vừa xem một bộ phim buồn"}
+{"id": "intent-0047", "kind": "intent", "label": "sharing", "split": "train", "text": "mình lo cho sức khoẻ của bà mình"}
+{"id": "intent-0048", "kind": "intent", "label": "sharing", "split": "train", "text": "mình thấy áp lực khi so sánh với bạn bè"}
+{"id": "intent-0049", "kind": "intent", "label": "sharing", "split": "train", "text": "mình đang dần quen với nhịp sống mới"}
+{"id": "intent-0050", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình vừa nhận lương, thấy nhẹ nhõm"}
+{"id": "intent-0051", "kind": "intent", "label": "sharing", "split": "train", "text": "hôm nay mình ngủ đủ giấc nên dễ chịu"}
+{"id": "intent-0052", "kind": "intent", "label": "sharing", "split": "train", "text": "mình thấy chông chênh khi sắp ra trường"}
+{"id": "intent-0053", "kind": "intent", "label": "sharing", "split": "train", "text": "mình buồn vì con mèo nhà mình bị ốm"}
+{"id": "intent-0054", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình vừa nói chuyện với chị gái, đỡ hơn nhiều"}
+{"id": "intent-0055", "kind": "intent", "label": "sharing", "split": "train", "text": "mình thấy mình đang cố quá sức"}
+{"id": "intent-0056", "kind": "intent", "label": "sharing", "split": "train", "text": "mấy hôm nay mình hay cáu vặt"}
+{"id": "intent-0057", "kind": "intent", "label": "sharing", "split": "train", "text": "mình vừa hoàn thành một việc lớn"}
+{"id": "intent-0058", "kind": "intent", "label": "sharing", "split": "dev", "text": "mình đang thấy mông lung về tương lai"}
+{"id": "intent-0059", "kind": "intent", "label": "sharing", "split": "train", "text": "cảm ơn vì đã nghe mình nói"}
+{"id": "intent-0060", "kind": "intent", "label": "sharing", "split": "train", "text": "mình chỉ muốn tâm sự chút cho nhẹ lòng"}
+{"id": "intent-0061", "kind": "intent", "label": "meta", "split": "train", "text": "cái này có phải bác sĩ tư vấn không"}
+{"id": "intent-0062", "kind": "intent", "label": "meta", "split": "train", "text": "mình có cần đăng ký tài khoản không"}
+{"id": "intent-0063", "kind": "intent", "label": "meta", "split": "train", "text": "thông tin mình gõ vào có ai đọc được không"}
+{"id": "intent-0064", "kind": "intent", "label": "meta", "split": "dev", "text": "bạn hoạt động dựa trên công nghệ gì"}
+{"id": "intent-0065", "kind": "intent", "label": "meta", "split": "train", "text": "bài đánh giá có bao nhiêu câu hỏi"}
+{"id": "intent-0066", "kind": "intent", "label": "meta", "split": "train", "text": "kết quả bài test có chính xác không"}
+{"id": "intent-0067", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có lưu lịch sử trò chuyện không"}
+{"id": "intent-0068", "kind": "intent", "label": "meta", "split": "dev", "text": "ai phát triển ứng dụng này"}
+{"id": "intent-0069", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có thể chẩn đoán bệnh cho mình không"}
+{"id": "intent-0070", "kind": "intent", "label": "meta", "split": "train", "text": "dùng cái này có tốn tiền không"}
+{"id": "intent-0071", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có hiểu tiếng Anh không"}
+{"id": "intent-0072", "kind": "intent", "label": "meta", "split": "dev", "text": "tài liệu bạn dùng là của tổ chức nào"}
+{"id": "intent-0073", "kind": "intent", "label": "meta", "split": "train", "text": "giới hạn của bạn là gì"}
+{"id": "intent-0074", "kind": "intent", "label": "meta", "split": "train", "text": "mình có thể dùng trên điện thoại không"}
+{"id": "intent-0075", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có gửi dữ liệu cho bên thứ ba không"}
+{"id": "intent-0076", "kind": "intent", "label": "meta", "split": "dev", "text": "vì sao bạn từ chối trả lời một số câu"}
+{"id": "intent-0077", "kind": "intent", "label": "meta", "split": "train", "text": "bạn nhớ được bao nhiêu lượt trò chuyện"}
+{"id": "intent-0078", "kind": "intent", "label": "meta", "split": "train", "text": "phần đánh giá hoạt động theo cách nào"}
+{"id": "intent-0079", "kind": "intent", "label": "meta", "split": "train", "text": "mình muốn biết ai chịu trách nhiệm nếu có sự cố"}
+{"id": "intent-0080", "kind": "intent", "label": "meta", "split": "dev", "text": "bạn được huấn luyện từ nguồn nào"}
+{"id": "intent-0081", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có thể cho tôi 1 số cách giảm căng thẳng chứ"}

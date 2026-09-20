@@ -1,0 +1,62 @@
+{"input": "chỉ tôi cách nào bớt căng thẳng đi", "expected_intent": "advice"}
+{"input": "cho tôi vài gợi ý với", "expected_intent": "advice"}
+{"input": "tôi muốn thử cái gì đó cho đỡ lo", "expected_intent": "advice"}
+{"input": "hướng dẫn tôi một bài tập tiếp đất", "expected_intent": "advice"}
+{"input": "cho mình một bài tập thở nhé", "expected_intent": "advice"}
+{"input": "tháo móc là gì?", "expected_intent": "advice"}
+{"input": "làm sao để hành động theo giá trị của bản thân?", "expected_intent": "advice"}
+{"input": "có cách nào để tử tế với chính mình hơn không?", "expected_intent": "advice"}
+{"input": "dọn chỗ cho cảm xúc là làm như thế nào?", "expected_intent": "advice"}
+{"input": "tôi nên làm gì khi cảm thấy quá tải?", "expected_intent": "advice"}
+{"input": "có bài tập nào giúp tôi bình tĩnh lại không?", "expected_intent": "advice"}
+{"input": "làm thế nào để không bị cuốn theo suy nghĩ tiêu cực?", "expected_intent": "advice"}
+{"input": "bày tôi cách nào để bớt suy nghĩ lung tung", "expected_intent": "advice"}
+{"input": "tôi cần một bài tập ngắn làm ngay bây giờ", "expected_intent": "advice"}
+{"input": "nói cho tôi biết dọn chỗ nghĩa là gì", "expected_intent": "advice"}
+{"input": "mình muốn học cách tử tế với bản thân", "expected_intent": "advice"}
+{"input": "hướng dẫn giúp mình cách quay về hiện tại", "expected_intent": "advice"}
+{"input": "tôi muốn biết làm thế nào để bớt tự trách mình", "expected_intent": "advice"}
+{"input": "chỉ giúp mình một cách để ngừng suy nghĩ lặp lại", "expected_intent": "advice"}
+{"input": "mình cần biết cách gọi tên cảm xúc của mình", "expected_intent": "advice"}
+{"input": "dạy tôi cách chấp nhận cảm giác khó chịu", "expected_intent": "advice"}
+{"input": "gợi ý cho mình việc gì đó nhỏ để làm hôm nay", "expected_intent": "advice"}
+
+{"input": "tôi ổn, chỉ vào xem thử thôi", "expected_intent": "sharing"}
+{"input": "hôm nay khá vui, vừa xong kỳ thi", "expected_intent": "sharing"}
+{"input": "chào bạn", "expected_intent": "sharing"}
+{"input": "dạo này mình mệt vì deadline", "expected_intent": "sharing"}
+{"input": "mình vừa cãi nhau với bạn thân", "expected_intent": "sharing"}
+{"input": "cảm ơn bạn đã lắng nghe", "expected_intent": "sharing"}
+{"input": "ừ mình hiểu rồi", "expected_intent": "sharing"}
+{"input": "công việc dạo này áp lực quá", "expected_intent": "sharing"}
+{"input": "mình thấy hơi cô đơn", "expected_intent": "sharing"}
+{"input": "gia đình mình dạo này không hiểu mình", "expected_intent": "sharing"}
+{"input": "mình vừa đi dạo về, thấy dễ chịu hơn nhiều", "expected_intent": "sharing"}
+{"input": "thôi để mai mình kể tiếp", "expected_intent": "sharing"}
+{"input": "hôm nay trời đẹp mà lòng mình thì không", "expected_intent": "sharing"}
+{"input": "mình vừa được tăng lương, thấy nhẹ người hẳn", "expected_intent": "sharing"}
+{"input": "chẳng có gì đâu, mình chỉ muốn nói chuyện chút thôi", "expected_intent": "sharing"}
+{"input": "mẹ mình vừa gọi điện hỏi thăm, tự nhiên thấy ấm lòng", "expected_intent": "sharing"}
+{"input": "dạo này mình hay thức khuya, người cứ uể oải", "expected_intent": "sharing"}
+{"input": "mình vừa đi dạo về, thấy đầu óc nhẹ hơn chút", "expected_intent": "sharing"}
+{"input": "hôm nay mình chẳng làm được gì cả, thấy hơi chán", "expected_intent": "sharing"}
+{"input": "cảm ơn bạn, nói chuyện xong mình thấy dễ chịu hơn", "expected_intent": "sharing"}
+{"input": "mình chỉ muốn kể vậy thôi chứ không cần lời khuyên đâu", "expected_intent": "sharing"}
+{"input": "dạo này mình hay nghĩ về hồi còn đi học", "expected_intent": "sharing"}
+
+{"input": "app này làm được gì", "expected_intent": "meta"}
+{"input": "dữ liệu của tôi có được lưu không", "expected_intent": "meta"}
+{"input": "bạn có phải bác sĩ không", "expected_intent": "meta"}
+{"input": "bạn dựa trên tài liệu nào để trả lời", "expected_intent": "meta"}
+{"input": "tôi có thể tin tưởng bạn đến mức nào", "expected_intent": "meta"}
+{"input": "bài đánh giá PSS-10 là gì vậy", "expected_intent": "meta"}
+{"input": "bài đánh giá của bạn dựa trên thang đo nào", "expected_intent": "meta"}
+{"input": "dữ liệu mình nhập vào có bị lưu lại không", "expected_intent": "meta"}
+{"input": "bạn lấy thông tin từ đâu ra vậy", "expected_intent": "meta"}
+{"input": "bạn có thể làm được những gì", "expected_intent": "meta"}
+{"input": "ai là người tạo ra bạn", "expected_intent": "meta"}
+{"input": "bạn có nhớ những gì mình kể lần trước không", "expected_intent": "meta"}
+{"input": "bạn trả lời dựa trên tài liệu nào vậy", "expected_intent": "meta"}
+{"input": "bạn có giới hạn gì không", "expected_intent": "meta"}
+{"input": "mình có thể làm bài đánh giá lại lần nữa không", "expected_intent": "meta"}
+{"input": "bạn có thay thế được bác sĩ tâm lý không", "expected_intent": "meta"}

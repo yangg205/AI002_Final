@@ -1,0 +1,121 @@
+item_id,user_raw_text,gold_label
+1,thỉnh thoảng cũng có nhưng không nhiều,2
+1,kbh luôn á tui chill lắm,0
+1,"tháng này thì yên ổn, chẳng có gì bất ngờ",0
+1,hầu như không tôi khá bình tĩnh với mấy chuyện bất ngờ,1
+1,cũng có vài lần nhưng không nhớ rõ mức độ thế nào,1
+1,cũng có vài lần bị bất ngờ nhưng không nhiều lắm,1
+1,thỉnh thoảng cũng có nhưng không nhiều,2
+1,"không hẳn là không, cũng có đôi lần",2
+1,"có chứ, đợt vừa rồi bị dí deadline bất ngờ buồn ghê",3
+1,tháng này liên tục có chuyện ập đến làm tôi buồn,3
+1,thường xuyên lắm cứ có gì bất ngờ là tôi suy sụp liền,4
+1,gần như ngày nào cũng có chuyện làm tôi hụt hẫng,4
+1,tuần nào cũng có chuyện gì đó ập tới,4
+2,không hề tôi luôn thấy mình nắm được tình hình,0
+2,mọi thứ quan trọng vẫn nằm trong tầm tay tôi,0
+2,chắc thỉnh thoảng thôi,1
+2,hầu như là không chỉ trừ vài lần đặc biệt,1
+2,"tôi thấy mình khá làm chủ, chỉ trừ vài việc ngoài ý muốn",1
+2,thỉnh thoảng tôi thấy mình chẳng làm chủ được gì cả,2
+2,"nói không kiểm soát được thì hơi quá, nhưng cũng không hẳn là nắm được",2
+2,đôi khi cảm thấy vậy nhất là lúc công việc dồn,3
+2,khá thường xuyên gần đây tôi thấy mọi thứ vượt tầm kiểm soát,3
+2,càng ngày càng thấy mọi thứ vuột khỏi tay,3
+2,rất thường xuyên tháng này tôi thấy bất lực ghê gớm,4
+2,hầu như lúc nào tôi cũng thấy mất kiểm soát,4
+3,không bao giờ tôi khá là thoải mái,0
+3,hiếm khi lắm,1
+3,chắc cũng có nhưng không để ý nhiều,1
+3,"chỉ căng lúc gần tới hạn nộp bài thôi, còn lại ổn",1
+3,cũng chẳng căng lắm đâu,1
+3,chỉ hồi hộp khi phải nói trước đám đông,1
+3,thỉnh thoảng tùy hôm,2
+3,"cũng có lúc này lúc kia, tầm vài lần một tuần",2
+3,"có, nhất là lúc chuẩn bị thi hoặc thuyết trình",4
+3,hay bị lắm gần như ngày nào cũng căng thẳng,4
+3,"tim tôi đập nhanh suốt, lúc nào cũng căng như dây đàn",4
+3,"gần như liên tục, cả tháng nay rồi",4
+4,nói thật là tôi chẳng còn tin mình làm được gì nữa,0
+4,không tự tin lắm thường thấy bối rối,1
+4,hiếm khi tôi thấy tự tin,1
+4,"hồi trước thì tự tin, giờ thì không còn nữa",1
+4,đôi khi tự tin đôi khi không,2
+4,"cũng tùy chuyện, nhưng nhìn chung là ổn",2
+4,"tùy việc, có việc tôi tự tin có việc thì không",2
+4,"cũng đỡ, không tệ lắm",2
+4,tôi khá tự tin hầu như lúc nào cũng vậy,3
+4,tôi khá tin vào khả năng xoay xở của mình,3
+4,tự tin vl việc gì cũng xử lý được,4
+4,tôi chưa bao giờ nghi ngờ khả năng của mình,4
+5,không bao giờ đời toàn không như mơ,0
+5,chẳng có gì theo ý tôi cả,0
+5,gần như chẳng bao giờ được như tôi muốn,0
+5,hiếm khi lắm mọi thứ hay đi ngược ý tôi,1
+5,thỉnh thoảng thôi,2
+5,"cũng khó nói, có lúc được có lúc không",2
+5,thỉnh thoảng cũng có việc được như ý,2
+5,"khó nói, lúc được lúc không",2
+5,khá thường xuyên tôi thấy mọi việc suôn sẻ,3
+5,phần lớn mọi thứ diễn ra đúng như tôi mong đợi,3
+5,phần lớn thời gian mọi thứ khá thuận,3
+5,rất thường xuyên tôi khá may mắn dạo này,4
+6,không hề tôi luôn hoàn thành được việc,0
+6,"tôi vẫn xoay xở hết được, không thấy quá sức",0
+6,tôi vẫn kiểm soát được khối lượng công việc,0
+6,hầu như không bao giờ gặp vấn đề này,1
+6,đôi khi thấy quá tải nhưng vẫn xoay xở được,2
+6,cũng có vài lần thấy đuối,2
+6,"có hôm đuối có hôm ổn, không đều",2
+6,"chưa tới mức không đương đầu nổi, nhưng cũng mệt",2
+6,việc cứ chất đống mà tôi không kham nổi,3
+6,thường xuyên dạo này việc nhiều quá làm không xuể,4
+6,rất thường xuyên gần như ngày nào cũng thấy ngộp,4
+6,ngày nào tôi cũng thấy quá tải,4
+7,hiếm khi tôi thấy mình làm chủ được tình hình,0
+7,rắc rối chồng chất mà tôi không giải quyết nổi cái nào,0
+7,tôi kiểm soát khá tốt ít khi gặp vấn đề,1
+7,nói là kiểm soát được thì cũng không đúng lắm,1
+7,thỉnh thoảng thôi không phải lúc nào cũng ổn,2
+7,"cũng tạm, được khoảng một nửa thôi",2
+7,khoảng một nửa số lần thì tôi xử lý ổn,2
+7,hầu như không kiểm soát được gì cả,3
+7,khá thường xuyên tôi xử lý được rắc rối ổn thỏa,3
+7,tôi xử lý được hầu hết rắc rối của mình,3
+7,kiểm soát tốt vl chuyện gì cũng lo được,4
+7,"tôi tự giải quyết được, không cần ai giúp",4
+8,chẳng có việc gì ra hồn cả,0
+8,chẳng có gì gọi là tốt đẹp cả,0
+8,hầu như không dạo này toàn chuyện không hay,1
+8,thỉnh thoảng có những ngày tốt lành,1
+8,hiếm khi lắm ít khi thấy mọi thứ suôn sẻ,1
+8,cũng tùy tuần có tuần tốt có tuần không,2
+8,cũng có lúc ổn lúc không,2
+8,"hôm được hôm không, thất thường lắm",2
+8,khá thường xuyên tôi thấy mọi thứ đang ổn,3
+8,dạo này mọi chuyện với tôi khá suôn sẻ,3
+8,"nói chung là ổn, không có gì phàn nàn",3
+8,yes sir moi thu on ap,4
+9,không bao giờ tôi khá điềm tĩnh,0
+9,gần như chưa bao giờ tôi nổi giận vì chuyện ngoài tầm tay,0
+9,hiếm khi tôi nổi giận vì mấy chuyện đó,1
+9,tôi ít khi nổi nóng vì mấy chuyện đó,1
+9,tôi ít khi để bụng mấy chuyện đó,1
+9,thỉnh thoảng nhất là lúc kẹt xe,2
+9,hay bực lắm cứ chuyện gì ngoài ý muốn là tôi khó chịu,3
+9,tôi hay bực mình vì những chuyện không phải do mình gây ra,3
+9,bực nhất là những chuyện mình không làm gì được,3
+9,rất thường xuyên cái gì cũng dễ làm tôi bực,4
+9,gần như ngày nào tôi cũng khó chịu vì chuyện đâu đâu,4
+10,không bao giờ tôi nghĩ vậy,0
+10,"chưa tới mức đó, tôi vẫn đi tiếp được",0
+10,chưa khi nào tôi thấy bế tắc tới mức đó,0
+10,hầu như không tôi luôn tìm được cách,1
+10,khó thì khó nhưng tôi vẫn vượt qua được,1
+10,thỉnh thoảng có cảm giác vậy nhưng rồi cũng qua,2
+10,cũng có đôi lần thấy quá sức,2
+10,có vài lần tôi thấy như mình sắp gục,2
+10,thường xuyên lắm gần đây tôi thấy bế tắc nhiều,3
+10,có những lúc tôi thấy mình không thể đi tiếp nổi nữa,3
+10,rất thường xuyên tôi thấy ngộp thở với mọi thứ,4
+10,lúc nào tôi cũng thấy mọi thứ quá sức mình,4

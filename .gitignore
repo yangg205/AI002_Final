@@ -1,0 +1,25 @@
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Node / Expo
+**/node_modules/
+**/.expo/
+**/dist/
+**/coverage/
+**/*.tsbuildinfo
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/venv/
+**/.venv-backend/
+**/.python-backend/
+**/vector_store/
+**/vector_store_test/
+**/eval/scripts/.cache/
+
+# OS/editor files
+.DS_Store

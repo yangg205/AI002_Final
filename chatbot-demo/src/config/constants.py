@@ -1,0 +1,181 @@
+from pathlib import Path
+
+SRC_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = SRC_DIR.parent
+DATA_DIR = PROJECT_ROOT / "data"
+
+PSS10_QUESTIONS_PATH = DATA_DIR / "pss10_questions.csv"
+CRISIS_RESOURCES_PATH = DATA_DIR / "crisis_resources.json"
+DWM_PDF_PATH = DATA_DIR / "who_dwm_vi.pdf"
+
+VECTOR_STORE_DIR = PROJECT_ROOT / "vector_store"
+
+PSS10_NUM_ITEMS = 10
+
+LIKERT_MIN = 0
+LIKERT_MAX = 4
+
+REVERSE_ITEMS = (4, 5, 7, 8)
+
+PSS10_SCORE_MIN = 0
+PSS10_SCORE_MAX = 40
+
+LEVEL_LOW = "low"
+LEVEL_MEDIUM = "medium"
+LEVEL_HIGH = "high"
+
+PSS10_LEVELS = (
+    (0, 13, LEVEL_LOW),
+    (14, 26, LEVEL_MEDIUM),
+    (27, 40, LEVEL_HIGH),
+)
+
+LEVEL_TO_SKILLS = {
+    LEVEL_LOW: ("acting_on_values", "being_kind"),
+    LEVEL_MEDIUM: ("grounding", "unhooking"),
+    LEVEL_HIGH: ("grounding", "making_room"),
+}
+
+LEVELS_SHOWING_SUPPORT_BLOCK = (LEVEL_HIGH,)
+
+ASSESSMENT_TRIGGER_KEYWORDS = (
+    "đánh giá",
+    "bắt đầu",
+    "làm bài",
+    "kiểm tra",
+    "pss",
+    "thang đo",
+)
+
+TURNS_BEFORE_OFFERING_ASSESSMENT = 3
+
+GROQ_API_KEY_ENV = "GROQ_API_KEY"
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+
+GROQ_MODEL = "openai/gpt-oss-120b"
+
+GROQ_RISK_MODEL = "openai/gpt-oss-120b"
+
+GROQ_INTENT_MODEL = "openai/gpt-oss-120b"
+
+LLM_TEMPERATURE = 0.0
+
+# gpt-oss la model co buoc suy luan an, va token suy luan cung bi tru vao
+# max_tokens. Dung tran cao de giam kha nang cau tra loi bi cat giua chung.
+LLM_MAX_TOKENS = 900
+LLM_REASONING_EFFORT = "low"
+LLM_TIMEOUT_SECONDS = 20
+LLM_HISTORY_TURNS = 6
+# Giữ phản hồi ổn định giữa giao diện Streamlit và các client API khi chúng
+# gửi cùng nội dung và cùng lịch sử. Nhà cung cấp vẫn có thể có sai khác rất nhỏ.
+LLM_SEED = 42
+
+DWM_SKILL_PAGE_RANGES = {
+    "grounding": (10, 51),
+    "unhooking": (52, 78),
+    "acting_on_values": (79, 98),
+    "being_kind": (99, 106),
+    "making_room": (107, 120),
+}
+
+DWM_SUMMARY_PAGES = {
+    "grounding": 122,
+    "unhooking": 123,
+    "acting_on_values": 124,
+    "being_kind": 125,
+    "making_room": 126,
+}
+
+
+CHUNK_TARGET_MIN_CHARS = 1200
+CHUNK_TARGET_MAX_CHARS = 1500
+CHUNK_MAX_PAGES = 6
+CHUNK_OVERLAP_PAGES = 1
+
+CHROMA_COLLECTION_NAME = "who_dwm_vi"
+RAG_MANIFEST_FILENAME = "manifest.json"
+
+GEMINI_API_KEY_ENV = "GEMINI_API_KEY"
+GEMINI_API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
+
+GEMINI_EMBED_MODEL = "gemini-embedding-001"
+
+GEMINI_EMBED_DIMENSIONS = 768
+
+GEMINI_EMBED_BATCH_SIZE = 20
+GEMINI_EMBED_TIMEOUT_SECONDS = 60
+GEMINI_EMBED_MAX_RETRIES = 4
+GEMINI_EMBED_RETRY_DELAY_SECONDS = 20
+GEMINI_TASK_TYPE_DOCUMENT = "RETRIEVAL_DOCUMENT"
+GEMINI_TASK_TYPE_QUERY = "RETRIEVAL_QUERY"
+
+RAG_TOP_K = 3
+RAG_SIMILARITY_THRESHOLD = 0.68
+
+KNN_EXAMPLES_PATH = DATA_DIR / "knn_examples.jsonl"
+CHROMA_EXAMPLES_COLLECTION_NAME = "knn_examples_vi"
+KNN_MANIFEST_FILENAME = "manifest_examples.json"
+GEMINI_TASK_TYPE_SIMILARITY = "SEMANTIC_SIMILARITY"
+
+KNN_ENABLED = True
+KNN_RISK_ENABLED = True
+KNN_INTENT_ENABLED = True
+
+KNN_TOP_K = 3
+KNN_NEIGHBOR_POOL = 10
+KNN_QUERY_CACHE_SIZE = 128
+KNN_MASK_QUERY = True
+
+KNN_RISK_THRESHOLD = 0.80
+KNN_RISK_MIN_VOTES = 3
+KNN_RISK_HIGH_MARGIN = 0.08
+
+KNN_INTENT_TOP_K = 5
+KNN_INTENT_THRESHOLD = 0.80
+KNN_INTENT_POLICY = "knn_confident"
+
+INTENT_ADVICE = "advice"
+INTENT_SHARING = "sharing"
+INTENT_META = "meta"
+INTENT_LABELS = (INTENT_ADVICE, INTENT_SHARING, INTENT_META)
+
+INTENT_FALLBACK = INTENT_SHARING
+
+INTENT_TEMPERATURE = 0.0
+INTENT_MAX_TOKENS = 512
+
+NORMALIZE_ENABLED = True
+NORMALIZE_MAX_LETTER_RUN_FOR_JOIN = 4
+NORMALIZE_REPEAT_COLLAPSE_MIN = 3
+NORMALIZE_CACHE_SIZE = 256
+KEYWORD_STRICT_MIN_CHARS = 12
+
+RISK_CONFIDENCE_LEVELS = ("high", "medium", "low")
+
+RISK_PROMPT_VERSION = 1
+INTENT_PROMPT_VERSION = 1
+
+RISK_TEMPERATURE = 0.0
+RISK_MAX_TOKENS = 512
+
+MAPPING_TEMPERATURE = 0.0
+MAPPING_MAX_TOKENS = 512
+
+DATABASE_URL_ENV = "DATABASE_URL"
+DB_SCHEMA_PATH = DATA_DIR / "schema.sql"
+DB_POOL_MAX_SIZE = 5
+DB_CONNECT_TIMEOUT_SECONDS = 10
+
+AUTH_MIN_PASSWORD_LENGTH = 8
+AUTH_MAX_PASSWORD_BYTES = 72
+AUTH_MAX_FAILED_ATTEMPTS = 5
+AUTH_LOCKOUT_MINUTES = 15
+AUTH_USERNAME_PATTERN = r"^[a-zA-Z0-9_.-]{3,32}$"
+AUTH_TOKEN_SECRET_ENV = "AUTH_TOKEN_SECRET"
+AUTH_TOKEN_TTL_SECONDS = 86400
+AUTH_TOKEN_ISSUER = "chatbot-demo"
+
+HISTORY_MAX_CONVERSATIONS = 20
+HISTORY_MAX_MESSAGES = 500
+
+DEBUG_SIDEBAR_ENV = "DEBUG_SIDEBAR"

@@ -1,0 +1,11 @@
+item_id,text_vi,reverse,options
+1,"Trong tháng vừa qua, ông/bà có thường buồn bã bởi vì điều gì đó xảy ra đột ngột không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+2,"Trong tháng vừa qua, ông/bà có thường cảm thấy ông/bà không thể kiểm soát những điều quan trọng trong cuộc đời của mình không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+3,"Trong tháng vừa qua, ông/bà có thường cảm thấy hồi hộp và căng thẳng không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+4,"Trong tháng vừa qua, ông/bà có thường cảm thấy tự tin về khả năng xử lý vấn đề của mình không?",True,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+5,"Trong tháng vừa qua, ông/bà có thường cảm thấy sự việc diễn ra theo ý của mình không?",True,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+6,"Trong tháng vừa qua, ông/bà có thường cảm thấy ông/bà không thể đương đầu với những điều mà mình phải làm không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+7,"Trong tháng vừa qua, ông/bà có thường kiểm soát được những rắc rối của mình không?",True,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+8,"Trong tháng vừa qua, ông/bà có thường cảm thấy mọi thứ đang xảy ra rất tốt với mình không?",True,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+9,"Trong tháng vừa qua, ông/bà có thường giận dữ vì việc gì đó xảy ra ngoài tầm kiểm soát của mình không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên
+10,"Trong tháng vừa qua, ông/bà có thường cảm thấy quá khó khăn đến nỗi mình không thể vượt qua được không?",False,Không bao giờ|Hầu như không bao giờ|Đôi khi|Khá thường xuyên|Rất thường xuyên

@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.streamlit/secrets.toml
+
+vector_store/
+vector_store_test/
+CLAUDE.md
+
+eval/scripts/.cache/

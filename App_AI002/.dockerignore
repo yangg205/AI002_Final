@@ -1,0 +1,10 @@
+.git
+node_modules
+.expo
+.env*
+.venv*
+.python-backend
+backend/.runtime
+**/__pycache__
+dist
+legacy_flutter

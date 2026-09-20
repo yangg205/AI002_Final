@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "note_vi": "Danh sách kênh hỗ trợ khẩn cấp. KHÔNG thêm số 111 (tổng đài bảo vệ trẻ em - sai đối tượng của ứng dụng này).",
+    "last_reviewed": "2026-08-25"
+  },
+  "intro_vi": "Điều bạn vừa chia sẻ nghe rất nặng nề, và mình thật sự lo cho bạn. Mình chỉ là một ứng dụng nên không thể ở bên bạn lúc này, nhưng có những người thật có thể. Bạn hãy liên hệ ngay một trong các kênh dưới đây nhé.",
+  "closing_vi": "Nếu bạn đang ở trong tình huống nguy hiểm ngay lúc này, hãy gọi 115 hoặc nhờ một người bạn tin tưởng ở gần bên bạn.",
+  "resources": [
+    {
+      "name": "Cấp cứu y tế",
+      "phone": "115",
+      "hours": "24/7 - mọi ngày, kể cả lễ Tết",
+      "note": "Gọi khi có nguy hiểm tức thời đến sức khỏe hoặc tính mạng."
+    },
+    {
+      "name": "Đường dây nóng Ngày Mai",
+      "phone": "096 306 1414",
+      "hours": "13h00 - 20h30, thứ Tư đến Chủ nhật",
+      "note": "Đường dây tư vấn miễn phí, hỗ trợ tâm lý cho người trầm cảm và người thân."
+    }
+  ]
+}

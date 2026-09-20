@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "JoyfulMind",
+    "slug": "joyfulmind",
+    "scheme": "joyfulmind",
+    "version": "1.0.0",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFFEFC",
+    "icon": "./assets/icon.png",
+    "plugins": [
+      "expo-dev-client",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFF8E8",
+          "image": "./assets/icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "versionCode": 1,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/icon.png"
+    }
+  }
+}
+

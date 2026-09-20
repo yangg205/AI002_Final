@@ -1,0 +1,17 @@
+node_modules/
+.expo/
+dist/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+coverage/
+android/
+ios/
+__pycache__/
+*.pyc
+.venv/
+.venv-backend/
+.python-backend/
+backend/.runtime/
+backend/vector_store/

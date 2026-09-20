@@ -1,0 +1,4 @@
+# Thư mục chứa output của eval (results.md, csv/) và log runtime khi bật
+# EVAL_MODE=true (eval/output/guardrails_log.csv, eval/output/rag_log.csv).
+# Giữ thư mục này trong repo để bind mount của Docker không tạo nó với quyền
+# root - container chạy bằng user uid 10001 nên sẽ không ghi được log.

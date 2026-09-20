@@ -1,0 +1,61 @@
+﻿subtest,input,expected,actual,verdict,score,votes,nearest_id,nearest_text
+knn_intent,chỉ tôi cách nào bớt căng thẳng đi,advice,advice,CORRECT,0.919,advice,advice,agreed
+knn_intent,cho tôi vài gợi ý với,advice,advice,CORRECT,0.857,advice,advice,agreed
+knn_intent,tôi muốn thử cái gì đó cho đỡ lo,advice,advice,CORRECT,0.869,advice,advice,agreed
+knn_intent,hướng dẫn tôi một bài tập tiếp đất,advice,advice,CORRECT,0.862,advice,advice,agreed
+knn_intent,cho mình một bài tập thở nhé,advice,advice,CORRECT,0.867,advice,advice,agreed
+knn_intent,tháo móc là gì?,advice,advice,CORRECT,0.806,advice,advice,agreed
+knn_intent,làm sao để hành động theo giá trị của bản thân?,advice,advice,CORRECT,0.875,advice,advice,agreed
+knn_intent,có cách nào để tử tế với chính mình hơn không?,advice,advice,CORRECT,0.936,advice,advice,agreed
+knn_intent,dọn chỗ cho cảm xúc là làm như thế nào?,advice,advice,CORRECT,0.875,advice,advice,agreed
+knn_intent,tôi nên làm gì khi cảm thấy quá tải?,advice,advice,CORRECT,0.891,advice,advice,agreed
+knn_intent,có bài tập nào giúp tôi bình tĩnh lại không?,advice,advice,CORRECT,0.898,advice,advice,agreed
+knn_intent,làm thế nào để không bị cuốn theo suy nghĩ tiêu cực?,advice,advice,CORRECT,0.928,advice,advice,agreed
+knn_intent,bày tôi cách nào để bớt suy nghĩ lung tung,advice,advice,CORRECT,0.902,advice,advice,agreed
+knn_intent,tôi cần một bài tập ngắn làm ngay bây giờ,advice,advice,CORRECT,0.911,advice,advice,agreed
+knn_intent,nói cho tôi biết dọn chỗ nghĩa là gì,advice,advice,CORRECT,0.817,advice,advice,agreed
+knn_intent,mình muốn học cách tử tế với bản thân,advice,advice,CORRECT,0.898,advice,advice,agreed
+knn_intent,hướng dẫn giúp mình cách quay về hiện tại,advice,advice,CORRECT,0.903,advice,advice,agreed
+knn_intent,tôi muốn biết làm thế nào để bớt tự trách mình,advice,advice,CORRECT,0.891,advice,advice,agreed
+knn_intent,chỉ giúp mình một cách để ngừng suy nghĩ lặp lại,advice,advice,CORRECT,0.882,advice,advice,agreed
+knn_intent,mình cần biết cách gọi tên cảm xúc của mình,advice,advice,CORRECT,0.940,advice,advice,agreed
+knn_intent,dạy tôi cách chấp nhận cảm giác khó chịu,advice,advice,CORRECT,0.929,advice,advice,agreed
+knn_intent,gợi ý cho mình việc gì đó nhỏ để làm hôm nay,advice,advice,CORRECT,0.862,advice,advice,agreed
+knn_intent,"tôi ổn, chỉ vào xem thử thôi",sharing,sharing,CORRECT,0.829,sharing,sharing,agreed
+knn_intent,"hôm nay khá vui, vừa xong kỳ thi",sharing,sharing,CORRECT,0.917,sharing,sharing,agreed
+knn_intent,chào bạn,sharing,sharing,CORRECT,0.818,sharing,sharing,agreed
+knn_intent,dạo này mình mệt vì deadline,sharing,sharing,CORRECT,0.894,sharing,sharing,agreed
+knn_intent,mình vừa cãi nhau với bạn thân,sharing,sharing,CORRECT,0.937,sharing,sharing,agreed
+knn_intent,cảm ơn bạn đã lắng nghe,sharing,sharing,CORRECT,0.974,sharing,sharing,agreed
+knn_intent,ừ mình hiểu rồi,sharing,sharing,CORRECT,0.836,sharing,sharing,agreed
+knn_intent,công việc dạo này áp lực quá,sharing,sharing,CORRECT,0.902,sharing,sharing,agreed
+knn_intent,mình thấy hơi cô đơn,sharing,sharing,CORRECT,0.902,sharing,sharing,agreed
+knn_intent,gia đình mình dạo này không hiểu mình,sharing,sharing,CORRECT,0.861,sharing,sharing,agreed
+knn_intent,"mình vừa đi dạo về, thấy dễ chịu hơn nhiều",sharing,sharing,CORRECT,0.890,sharing,sharing,agreed
+knn_intent,thôi để mai mình kể tiếp,sharing,sharing,CORRECT,0.884,sharing,sharing,agreed
+knn_intent,hôm nay trời đẹp mà lòng mình thì không,sharing,sharing,CORRECT,0.884,sharing,sharing,agreed
+knn_intent,"mình vừa được tăng lương, thấy nhẹ người hẳn",sharing,sharing,CORRECT,0.890,sharing,sharing,agreed
+knn_intent,"chẳng có gì đâu, mình chỉ muốn nói chuyện chút thôi",sharing,sharing,CORRECT,0.904,sharing,sharing,agreed
+knn_intent,"mẹ mình vừa gọi điện hỏi thăm, tự nhiên thấy ấm lòng",sharing,sharing,CORRECT,0.807,sharing,sharing,agreed
+knn_intent,"dạo này mình hay thức khuya, người cứ uể oải",sharing,sharing,CORRECT,0.892,sharing,sharing,agreed
+knn_intent,"mình vừa đi dạo về, thấy đầu óc nhẹ hơn chút",sharing,sharing,CORRECT,0.871,sharing,sharing,agreed
+knn_intent,"hôm nay mình chẳng làm được gì cả, thấy hơi chán",sharing,sharing,CORRECT,0.869,sharing,sharing,agreed
+knn_intent,"cảm ơn bạn, nói chuyện xong mình thấy dễ chịu hơn",sharing,sharing,CORRECT,0.899,sharing,sharing,agreed
+knn_intent,mình chỉ muốn kể vậy thôi chứ không cần lời khuyên đâu,sharing,sharing,CORRECT,0.930,sharing,sharing,agreed
+knn_intent,dạo này mình hay nghĩ về hồi còn đi học,sharing,sharing,CORRECT,0.888,sharing,sharing,agreed
+knn_intent,app này làm được gì,meta,meta,CORRECT,0.873,meta,meta,agreed
+knn_intent,dữ liệu của tôi có được lưu không,meta,meta,CORRECT,0.847,meta,meta,agreed
+knn_intent,bạn có phải bác sĩ không,meta,meta,CORRECT,0.915,meta,meta,agreed
+knn_intent,bạn dựa trên tài liệu nào để trả lời,meta,meta,CORRECT,0.811,meta,meta,agreed
+knn_intent,tôi có thể tin tưởng bạn đến mức nào,meta,meta,CORRECT,0.869,meta,meta,agreed
+knn_intent,bài đánh giá PSS-10 là gì vậy,meta,meta,CORRECT,0.844,meta,advice,disagreed
+knn_intent,bài đánh giá của bạn dựa trên thang đo nào,meta,meta,CORRECT,0.878,meta,meta,agreed
+knn_intent,dữ liệu mình nhập vào có bị lưu lại không,meta,meta,CORRECT,0.867,meta,meta,agreed
+knn_intent,bạn lấy thông tin từ đâu ra vậy,meta,meta,CORRECT,0.819,meta,meta,agreed
+knn_intent,bạn có thể làm được những gì,meta,meta,CORRECT,0.881,meta,meta,agreed
+knn_intent,ai là người tạo ra bạn,meta,meta,CORRECT,0.793,meta,meta,agreed
+knn_intent,bạn có nhớ những gì mình kể lần trước không,meta,sharing,WRONG,0.857,meta,sharing,disagreed
+knn_intent,bạn trả lời dựa trên tài liệu nào vậy,meta,meta,CORRECT,0.812,meta,meta,agreed
+knn_intent,bạn có giới hạn gì không,meta,meta,CORRECT,0.977,meta,meta,agreed
+knn_intent,mình có thể làm bài đánh giá lại lần nữa không,meta,meta,CORRECT,0.833,meta,meta,agreed
+knn_intent,bạn có thay thế được bác sĩ tâm lý không,meta,meta,CORRECT,0.854,meta,meta,agreed
