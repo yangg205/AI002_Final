@@ -135,7 +135,7 @@ export function StressLevelCard({
           testID="stress-slider"
         >
           <LinearGradient
-            colors={['#75E98C', '#F6E733', '#FF8E93', '#C85B89']}
+            colors={['#D8E1DB', '#AABDB1', '#49645A']}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
             style={[styles.gradientTrack, { pointerEvents: 'none' }]}
@@ -154,9 +154,9 @@ export function StressLevelCard({
       </View>
 
       <View style={styles.emojiRow} accessible={false}>
-        <Text style={styles.emoji}>😊</Text>
-        <Text style={styles.emoji}>😐</Text>
-        <Text style={styles.emoji}>😵</Text>
+        <Text style={styles.emoji}>Thấp</Text>
+        <Text style={styles.emoji}>Vừa</Text>
+        <Text style={styles.emoji}>Cao</Text>
       </View>
     </View>
   );
@@ -168,13 +168,8 @@ const styles = StyleSheet.create({
     paddingRight: 25,
     paddingBottom: 22,
     paddingLeft: 25,
-    borderRadius: 50,
+    borderRadius: 16,
     backgroundColor: colors.cream,
-    shadowColor: '#7B6500',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.05,
-    shadowRadius: 14,
-    elevation: 3,
   },
   headerRow: {
     flexDirection: 'row',
@@ -195,10 +190,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 8,
-    backgroundColor: '#FFD921',
+    backgroundColor: colors.creamMuted,
   },
   levelLabel: {
-    color: '#695B1D',
+    color: colors.oliveDark,
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
@@ -236,6 +231,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   emoji: {
-    fontSize: 24,
+    color: colors.darkText,
+    fontSize: 12,
   },
 });

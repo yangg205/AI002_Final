@@ -147,16 +147,13 @@ RAG_CONTEXT_HEADER_VI = "Đoạn trích từ tài liệu WHO:"
 RAG_CITATION_PREFIX_VI = "Nguồn: tài liệu WHO"
 
 RAG_ERROR_MESSAGE_VI = (
-    "Xin lỗi bạn, mình đang gặp sự cố kỹ thuật nên chưa tra cứu được tài liệu "
-    "WHO lúc này. Nguyên nhân có thể là thiếu khóa API, kho vector chưa được "
-    "tạo, mất mạng hoặc hết hạn mức gọi. Mình sẽ không trả lời đoán để tránh "
-    "nói sai điều không có cơ sở. Bạn thử lại sau giúp mình nhé."
+    "Xin lỗi bạn, mình chưa tra cứu được tài liệu WHO lúc này nên chưa thể "
+    "đưa ra hướng dẫn có căn cứ. Bạn thử lại sau giúp mình nhé."
 )
 
 PSS10_SKILLS_UNAVAILABLE_VI = (
-    "Chưa hiển thị được nội dung 5 kỹ năng vì kho vector chưa sẵn sàng. Hãy "
-    "chạy `python3 tools/index_documents.py` để tạo. Điểm và mức độ ở trên vẫn "
-    "chính xác vì được chấm hoàn toàn tại chỗ."
+    "Chưa tải được nội dung các kỹ năng gợi ý lúc này. Điểm và mức độ ở trên "
+    "vẫn được tính đầy đủ. Bạn có thể thử lại sau."
 )
 
 MAPPING_SUGGESTION_NOTE_VI = (

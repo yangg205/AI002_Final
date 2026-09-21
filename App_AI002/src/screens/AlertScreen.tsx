@@ -1,8 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import type { ComponentProps } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Image,
   Linking,
   Pressable,
   ScrollView,
@@ -14,13 +13,29 @@ import {
 } from 'react-native';
 
 import type { AppTab } from '../navigation/tabs';
+import { ApiError, deleteTrustedContact, getTrustedContact, saveTrustedContact, type TrustedContact } from '../services/api';
+import {
+  deleteLocalTrustedContact,
+  hasPendingTrustedContactSync,
+  loadLocalTrustedContact,
+  saveLocalTrustedContact,
+} from '../services/trustedContact';
 import { colors } from '../theme/colors';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
+function canSaveContactOffline(reason: unknown): reason is ApiError {
+  return reason instanceof ApiError && (
+    reason.kind === 'network' || reason.kind === 'timeout' || reason.status === 503
+  );
+}
+
 type AlertScreenProps = {
   readonly onNotify: (text: string) => void;
   readonly onNavigate: (tab: AppTab) => void;
+  readonly accountKey?: string;
+  readonly accessToken?: string;
+  readonly active?: boolean;
 };
 
 type SupportActionProps = {
@@ -33,8 +48,6 @@ type SupportActionProps = {
   readonly testID: string;
   readonly textColor: string;
 };
-
-const mascot = require('../../assets/illustrations/joy-mascot.png');
 
 function SupportAction({
   backgroundColor,
@@ -75,17 +88,88 @@ function SupportAction({
   );
 }
 
-export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
+export function AlertScreen({ onNavigate, onNotify, accountKey, accessToken, active = true }: AlertScreenProps) {
+  const localContactKey = accountKey ?? 'guest';
   const { width } = useWindowDimensions();
   const compact = width < 360;
-  const [contact, setContact] = useState<{ name: string; phone: string } | null>(null);
-  const [editingContact, setEditingContact] = useState(true);
+  const [contact, setContact] = useState<TrustedContact | null>(null);
+  const [editingContact, setEditingContact] = useState(false);
+  const [contactLoading, setContactLoading] = useState(true);
+  const [contactSaving, setContactSaving] = useState(false);
   const [contactName, setContactName] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [contactError, setContactError] = useState<string | null>(null);
+  const [contactSyncMessage, setContactSyncMessage] = useState<string | null>(null);
   const [callError, setCallError] = useState<string | null>(null);
 
-  const saveContact = () => {
+  useEffect(() => {
+    let current = true;
+    if (!active) return () => { current = false; };
+    setContactLoading(true);
+    setContactError(null);
+    setContactSyncMessage(null);
+    const showContact = (saved: TrustedContact | null) => {
+      if (!current) return;
+      setContact(saved);
+      setContactName(saved?.name ?? '');
+      setContactPhone(saved?.phone ?? '');
+      setEditingContact(!saved);
+    };
+    const load = async () => {
+      try {
+        if (!accessToken) {
+          showContact(await loadLocalTrustedContact(localContactKey));
+          return;
+        }
+
+        const saved = await getTrustedContact(accessToken);
+        if (saved) {
+          showContact(saved);
+          setContactSyncMessage(null);
+          void saveLocalTrustedContact(localContactKey, saved).catch(() => undefined);
+          return;
+        }
+
+        const local = await loadLocalTrustedContact(localContactKey);
+        if (local && await hasPendingTrustedContactSync(localContactKey)) {
+          try {
+            const synced = await saveTrustedContact(accessToken, local);
+            showContact(synced);
+            setContactSyncMessage(null);
+            void saveLocalTrustedContact(localContactKey, synced).catch(() => undefined);
+          } catch (reason) {
+            showContact(local);
+            setContactSyncMessage(reason instanceof Error
+              ? `Đang dùng bản lưu trên thiết bị. Chưa đồng bộ được vào tài khoản: ${reason.message}`
+              : 'Đang dùng bản lưu trên thiết bị. Chưa đồng bộ được vào tài khoản.');
+          }
+          return;
+        }
+
+        await deleteLocalTrustedContact(localContactKey);
+        showContact(null);
+        setContactSyncMessage(null);
+      } catch (reason) {
+        const local = await loadLocalTrustedContact(localContactKey).catch(() => null);
+        if (canSaveContactOffline(reason) && local) {
+          showContact(local);
+          setContactSyncMessage(reason.status === 503
+            ? 'Chưa tải được liên hệ từ máy chủ; đang dùng bản lưu trên thiết bị.'
+            : 'Đang dùng số đã lưu trên thiết bị; chưa kết nối được tài khoản để đồng bộ.');
+          return;
+        }
+        if (!current) return;
+        setContactError(reason instanceof Error ? reason.message : 'Chưa tải được liên hệ tin cậy.');
+        setEditingContact(true);
+      } finally {
+        if (current) setContactLoading(false);
+      }
+    };
+    void load();
+    return () => { current = false; };
+  }, [accessToken, active, localContactKey]);
+
+  const saveContact = async () => {
     const name = contactName.trim();
     const phone = contactPhone.replace(/[\s().-]/g, '');
     if (!name) {
@@ -96,11 +180,62 @@ export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
       setContactError('Nhập số điện thoại gồm 7–15 chữ số, có thể bắt đầu bằng +.');
       return;
     }
-    setContact({ name, phone });
+    setContactSaving(true);
     setContactError(null);
-    setCallError(null);
-    setEditingContact(false);
-    onNotify('Đã lưu liên hệ tin cậy cho phiên sử dụng này.');
+    setContactSyncMessage(null);
+    let savedOffline = false;
+    try {
+      let saved: TrustedContact;
+      if (accessToken) {
+        try {
+          saved = await saveTrustedContact(accessToken, { name, phone });
+          await saveLocalTrustedContact(localContactKey, saved).catch(() => undefined);
+        } catch (reason) {
+          if (!canSaveContactOffline(reason)) throw reason;
+          saved = { name, phone };
+          await saveLocalTrustedContact(localContactKey, saved, true);
+          savedOffline = true;
+          setContactSyncMessage(reason.status === 503
+            ? `Đã lưu trên thiết bị này. Chưa ghi được vào tài khoản: ${reason.message}`
+            : 'Đã lưu trên thiết bị này. Kết nối máy chủ để đồng bộ liên hệ vào tài khoản.');
+          onNotify('Đã lưu trên thiết bị; chưa đồng bộ được liên hệ vào tài khoản.');
+        }
+      } else {
+        await saveLocalTrustedContact(localContactKey, { name, phone });
+        saved = { name, phone };
+      }
+      setContact(saved);
+      setContactName(saved.name);
+      setContactPhone(saved.phone);
+      setCallError(null);
+      setEditingContact(false);
+      if (!accessToken || !savedOffline) {
+        onNotify(accessToken ? 'Đã lưu liên hệ tin cậy vào tài khoản.' : 'Đã lưu liên hệ trên thiết bị này.');
+      }
+    } catch (reason) {
+      setContactError(reason instanceof Error ? reason.message : 'Chưa lưu được liên hệ tin cậy.');
+    } finally {
+      setContactSaving(false);
+    }
+  };
+
+  const removeContact = async () => {
+    setContactSaving(true);
+    setContactError(null);
+    setContactSyncMessage(null);
+    try {
+      if (accessToken) await deleteTrustedContact(accessToken);
+      await deleteLocalTrustedContact(localContactKey);
+      setContact(null);
+      setContactName('');
+      setContactPhone('');
+      setEditingContact(true);
+      onNotify('Đã xóa liên hệ tin cậy đã lưu.');
+    } catch (reason) {
+      setContactError(reason instanceof Error ? reason.message : 'Chưa xóa được liên hệ tin cậy.');
+    } finally {
+      setContactSaving(false);
+    }
   };
 
   const callNumber = async (phone: string) => {
@@ -132,28 +267,6 @@ export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
       style={styles.screen}
     >
       <View style={styles.content}>
-        <View
-          accessibilityLabel="Joy đang vẫy tay và ở đây để đồng hành cùng bạn"
-          accessible
-          style={[
-            styles.heroStage,
-            compact && styles.compactHeroStage,
-          ]}
-        >
-          <View accessible={false} style={styles.heroDotLarge} />
-          <View accessible={false} style={styles.heroDotSmall} />
-          <View style={styles.heroCard}>
-            <View style={styles.heroWindow}>
-              <Image
-                accessible={false}
-                resizeMode="contain"
-                source={mascot}
-                style={styles.mascot}
-              />
-            </View>
-          </View>
-        </View>
-
         <Text
           accessibilityRole="header"
           style={[styles.title, compact && styles.compactTitle]}
@@ -205,9 +318,10 @@ export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
         <View style={styles.contactCard}>
           <Text accessibilityRole="header" style={styles.contactTitle}>Liên hệ tin cậy</Text>
           <Text style={styles.contactHint}>
-            Liên hệ chỉ được giữ trong phiên này, sẽ mất khi tải lại hoặc đóng ứng dụng.
+            {accessToken ? 'Liên hệ được lưu trong tài khoản để dùng lại sau khi đăng nhập.' : 'Liên hệ được lưu trên thiết bị này. Đăng nhập để đồng bộ với tài khoản.'}
           </Text>
-          {editingContact ? (
+          {contactSyncMessage && <Text accessibilityRole="alert" style={styles.contactSyncMessage}>{contactSyncMessage}</Text>}
+          {contactLoading ? <Text style={styles.contactHint}>Đang tải liên hệ đã lưu…</Text> : editingContact ? (
             <>
               <Text style={styles.inputLabel}>Tên người thân hoặc bạn bè</Text>
               <TextInput
@@ -237,10 +351,11 @@ export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel="Lưu liên hệ tin cậy"
-                  onPress={saveContact}
+                  onPress={() => void saveContact()}
+                  disabled={contactSaving}
                   style={({ pressed }) => [styles.saveContactButton, pressed && styles.pressed]}
                 >
-                  <Text style={styles.breathingButtonText}>Lưu liên hệ</Text>
+                  <Text style={styles.breathingButtonText}>{contactSaving ? 'Đang lưu…' : 'Lưu liên hệ'}</Text>
                 </Pressable>
                 {contact && (
                   <Pressable
@@ -270,31 +385,34 @@ export function AlertScreen({ onNavigate, onNotify }: AlertScreenProps) {
               >
                 <Text style={styles.editContactText}>Sửa liên hệ</Text>
               </Pressable>
+              <Pressable accessibilityRole="button" disabled={contactSaving} onPress={() => void removeContact()} style={styles.removeContactButton}>
+                <Text style={styles.removeContactText}>Xóa liên hệ đã lưu</Text>
+              </Pressable>
             </>
           )}
         </View>
 
         <View style={styles.supportList}>
           <SupportAction
-            backgroundColor="#F57BA7"
+            backgroundColor={colors.cream}
             icon="call-outline"
-            iconColor="#A42D58"
+            iconColor={colors.olive}
             label="Gọi người thân"
             onPress={callContact}
             subtitle={contact ? `Mở cuộc gọi đến ${contact.name} · ${contact.phone}` : 'Lưu một liên hệ tin cậy ở trên để gọi nhanh'}
             testID="alert-call-action"
-            textColor="#69233E"
+            textColor={colors.darkText}
           />
 
           <SupportAction
-            backgroundColor={colors.yellow}
+            backgroundColor={colors.highlight}
             icon="chatbubbles-outline"
-            iconColor="#766300"
+            iconColor={colors.olive}
             label="Tâm sự cùng Joy"
             onPress={() => onNavigate('chat')}
             subtitle="Chia sẻ điều bạn đang cảm thấy"
             testID="alert-chat-action"
-            textColor="#514500"
+            textColor={colors.darkText}
           />
         </View>
 
@@ -339,106 +457,42 @@ const styles = StyleSheet.create({
     maxWidth: 560,
     alignSelf: 'center',
   },
-  heroStage: {
-    width: 220,
-    height: 220,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  compactHeroStage: {
-    width: 184,
-    height: 184,
-  },
-  heroCard: {
-    width: '82%',
-    height: '82%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 43,
-    backgroundColor: '#F57BA7',
-    shadowColor: '#D55080',
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
-    elevation: 5,
-    transform: [{ rotate: '-4deg' }],
-  },
-  heroWindow: {
-    width: '68%',
-    height: '48%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    overflow: 'hidden',
-    borderWidth: 5,
-    borderColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: 12,
-    backgroundColor: '#FFF1E8',
-    transform: [{ rotate: '4deg' }],
-  },
-  mascot: {
-    width: '86%',
-    height: '122%',
-  },
-  heroDotLarge: {
-    position: 'absolute',
-    top: 9,
-    right: 8,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFE0EA',
-  },
-  heroDotSmall: {
-    position: 'absolute',
-    bottom: 8,
-    left: 8,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#FFD92A',
-  },
   title: {
-    marginTop: 24,
-    color: '#17140F',
-    fontSize: 40,
-    fontWeight: '800',
-    letterSpacing: -1.3,
-    lineHeight: 47,
+    marginTop: 14,
+    color: colors.black,
+    fontSize: 30,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    lineHeight: 38,
     textAlign: 'center',
   },
   compactTitle: {
-    marginTop: 19,
-    fontSize: 33,
-    lineHeight: 39,
+    marginTop: 12,
+    fontSize: 28,
+    lineHeight: 36,
   },
   introduction: {
     maxWidth: 500,
-    marginTop: 18,
+    marginTop: 10,
     alignSelf: 'center',
     color: colors.darkText,
-    fontSize: 19,
-    lineHeight: 30,
+    fontSize: 16,
+    lineHeight: 25,
     textAlign: 'center',
   },
   compactIntroduction: {
-    fontSize: 17,
-    lineHeight: 27,
+    fontSize: 15,
+    lineHeight: 23,
   },
   adviceCard: {
-    marginTop: 38,
-    padding: 28,
-    borderRadius: 42,
-    backgroundColor: '#F7F0E7',
-    shadowColor: '#B36A80',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 3,
+    marginTop: 26,
+    padding: 20,
+    borderRadius: 14,
+    backgroundColor: colors.cream,
   },
   compactAdviceCard: {
-    padding: 21,
-    borderRadius: 32,
+    padding: 17,
+    borderRadius: 14,
   },
   adviceHeading: {
     flexDirection: 'row',
@@ -452,20 +506,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 27,
-    backgroundColor: '#F684AD',
+    backgroundColor: colors.mint,
   },
   adviceTitle: {
     flex: 1,
-    color: '#211A15',
-    fontSize: 19,
-    fontWeight: '800',
+    color: colors.black,
+    fontSize: 17,
+    fontWeight: '700',
     lineHeight: 25,
   },
   adviceText: {
     marginTop: 17,
-    color: '#443A32',
-    fontSize: 16,
-    lineHeight: 26,
+    color: colors.darkText,
+    fontSize: 15,
+    lineHeight: 24,
   },
   breathingButton: {
     minHeight: 50,
@@ -475,39 +529,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     paddingHorizontal: 18,
-    borderRadius: 25,
-    backgroundColor: '#A42D58',
+    borderRadius: 10,
+    backgroundColor: colors.olive,
   },
   breathingButtonText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontWeight: '800',
+    fontWeight: '700',
   },
   supportTitle: {
-    marginTop: 40,
+    marginTop: 30,
     marginLeft: 6,
-    color: '#17140F',
-    fontSize: 25,
-    fontWeight: '800',
-    lineHeight: 32,
+    color: colors.black,
+    fontSize: 21,
+    fontWeight: '700',
+    lineHeight: 28,
   },
   supportList: {
     marginTop: 20,
-    gap: 16,
+    gap: 10,
   },
-  contactCard: { marginTop: 20, padding: 20, borderRadius: 24, backgroundColor: '#FFF6EE' },
-  contactTitle: { color: colors.darkText, fontWeight: '800', fontSize: 18 },
-  contactHint: { marginTop: 8, color: '#6B4C3B', fontSize: 13, lineHeight: 20 },
+  contactCard: { marginTop: 20, padding: 18, borderRadius: 14, backgroundColor: colors.cream },
+  contactTitle: { color: colors.darkText, fontWeight: '700', fontSize: 17 },
+  contactHint: { marginTop: 8, color: colors.darkText, fontSize: 13, lineHeight: 20 },
+  contactSyncMessage: { marginTop: 10, color: '#79572F', fontSize: 13, lineHeight: 19 },
   inputLabel: { marginTop: 16, marginBottom: 6, color: colors.darkText, fontSize: 14, fontWeight: '600' },
-  contactInput: { minHeight: 48, borderWidth: 1, borderColor: '#D9C4B5', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10, color: colors.darkText, backgroundColor: '#FFFFFF', fontSize: 16 },
+  contactInput: { minHeight: 48, borderWidth: 1, borderColor: colors.outline, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 10, color: colors.darkText, backgroundColor: '#FFFFFF', fontSize: 16 },
   errorText: { marginTop: 12, color: '#9B2045', fontSize: 14, lineHeight: 21 },
   contactButtons: { flexDirection: 'row', gap: 12, marginTop: 16 },
-  saveContactButton: { minHeight: 46, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 23, backgroundColor: '#A42D58', justifyContent: 'center' },
+  saveContactButton: { minHeight: 46, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 10, backgroundColor: colors.olive, justifyContent: 'center' },
   editContactButton: { minHeight: 44, alignSelf: 'flex-start', justifyContent: 'center', paddingHorizontal: 10 },
   editContactText: { color: '#8E244D', fontSize: 14, fontWeight: '700' },
+  removeContactButton: { minHeight: 40, alignSelf: 'flex-start', justifyContent: 'center', paddingHorizontal: 10 },
+  removeContactText: { color: colors.burgundy, fontSize: 13, fontWeight: '600' },
   contactName: { marginTop: 16, color: colors.darkText, fontSize: 17, fontWeight: '700' },
   contactPhone: { marginTop: 4, color: colors.darkText, fontSize: 17 },
-  emergencyButton: { minHeight: 50, marginTop: 12, backgroundColor: '#9B2045', borderRadius: 25, flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 12 },
+  emergencyButton: { minHeight: 50, marginTop: 12, backgroundColor: colors.burgundy, borderRadius: 10, flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 12 },
   supportAction: {
     minHeight: 108,
     flexDirection: 'row',
@@ -515,20 +572,15 @@ const styles = StyleSheet.create({
     gap: 15,
     paddingHorizontal: 21,
     paddingVertical: 17,
-    borderRadius: 38,
-    shadowColor: '#7B6500',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.09,
-    shadowRadius: 14,
-    elevation: 3,
+    borderRadius: 14,
   },
   supportIconCircle: {
-    width: 64,
-    height: 64,
+    width: 48,
+    height: 48,
     flexShrink: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 32,
+    borderRadius: 24,
     backgroundColor: '#FFFFFF',
   },
   supportCopy: {
@@ -536,8 +588,8 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   supportLabel: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '700',
     lineHeight: 24,
   },
   supportSubtitle: {
@@ -553,12 +605,12 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 15,
     paddingVertical: 14,
-    borderRadius: 18,
-    backgroundColor: '#FFF6EE',
+    borderRadius: 12,
+    backgroundColor: colors.cream,
   },
   emergencyText: {
     flex: 1,
-    color: '#6B4C3B',
+    color: colors.darkText,
     fontSize: 13,
     lineHeight: 19,
   },

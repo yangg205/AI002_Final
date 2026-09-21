@@ -11,7 +11,7 @@ export type AssessmentResult = {
   maximum: number;
   level: string;
   explanation: string;
-  skills: { id: string; title: string }[];
+  skills: { id: string; title: string; body?: string; pages?: string; source?: string }[];
   needs_support: boolean;
 };
 
@@ -31,6 +31,22 @@ export type ChatReply = {
   intent?: 'sharing' | 'advice' | 'meta';
   suggest_assessment: boolean;
   sources?: { title: string; pages: string }[];
+  conversation_id?: number | null;
+  history_saved?: boolean;
+  history_error?: string;
+};
+
+export type StoredHistory = {
+  conversation_id: number | null;
+  messages: HistoryMessage[];
+};
+
+export type ConversationSummary = {
+  id: number;
+  started_at: string;
+  title: string | null;
+  messages: number;
+  has_risk: boolean;
 };
 
 export type AuthUser = {
@@ -82,13 +98,17 @@ export function setApiBaseUrl(value: string): void {
 }
 
 export class ApiError extends Error {
-  constructor(message: string, public readonly status?: number) {
+  constructor(
+    message: string,
+    public readonly status?: number,
+    public readonly kind?: 'network' | 'timeout',
+  ) {
     super(message);
     this.name = 'ApiError';
   }
 }
 
-async function request<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
+async function request<T>(path: string, body?: unknown, signal?: AbortSignal, accessToken?: string, method?: 'GET' | 'POST' | 'PUT' | 'DELETE'): Promise<T> {
   const controller = new AbortController();
   const abort = () => controller.abort();
   signal?.addEventListener('abort', abort);
@@ -96,9 +116,11 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   const timeout = setTimeout(abort, path === '/health' ? 8000 : 120000);
   try {
     const response = await fetch(`${baseUrl}/api${path}`, {
-      method: body === undefined ? 'GET' : 'POST',
-      headers: body === undefined ? { Accept: 'application/json' } : {
-        Accept: 'application/json', 'Content-Type': 'application/json',
+      method: method ?? (body === undefined ? 'GET' : 'POST'),
+      headers: {
+        Accept: 'application/json',
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal: controller.signal,
@@ -109,7 +131,11 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
         const payload = await response.json() as { detail?: unknown };
         if (typeof payload.detail === 'string') message = payload.detail;
       } catch { /* Keep the friendly fallback for non-JSON errors. */ }
-      if (response.status === 429 || response.status === 503) {
+      if (response.status === 429) {
+        message = 'Joy đang nhận nhiều yêu cầu. Bạn thử lại sau nhé.';
+      } else if (response.status === 404 && path === '/history') {
+        message = 'Backend đang chạy phiên bản chưa có API lịch sử. Hãy khởi động lại backend rồi bấm “Làm mới”.';
+      } else if (response.status === 503 && path !== '/chat' && !path.startsWith('/assessment')) {
         message = 'Dịch vụ tài khoản tạm thời chưa sẵn sàng. Bạn thử lại sau nhé.';
       }
       throw new ApiError(message, response.status);
@@ -118,8 +144,10 @@ async function request<T>(path: string, body?: unknown, signal?: AbortSignal): P
   } catch (error) {
     if (error instanceof ApiError) throw error;
     if (signal?.aborted) throw new ApiError('Đã dừng chờ phản hồi.');
-    if (controller.signal.aborted) throw new ApiError('Phản hồi mất nhiều thời gian hơn dự kiến. Bạn có thể thử gửi lại.');
-    throw new ApiError('Chưa kết nối được với Joy. Kiểm tra mạng và địa chỉ máy chủ rồi thử lại nhé.');
+    if (controller.signal.aborted) {
+      throw new ApiError('Phản hồi mất nhiều thời gian hơn dự kiến. Bạn có thể thử gửi lại.', undefined, 'timeout');
+    }
+    throw new ApiError('Chưa kết nối được với Joy. Kiểm tra mạng và địa chỉ máy chủ rồi thử lại nhé.', undefined, 'network');
   } finally {
     clearTimeout(timeout);
     signal?.removeEventListener('abort', abort);
@@ -150,8 +178,12 @@ export async function getHealth(signal?: AbortSignal): Promise<HealthStatus> {
   return result;
 }
 
-export async function sendChat(message: string, history: HistoryMessage[], signal?: AbortSignal): Promise<ChatReply> {
-  const result = await request<ChatReply>('/chat', { message, history: history.slice(-12) }, signal);
+export async function sendChat(message: string, history: HistoryMessage[], signal?: AbortSignal, accessToken?: string, conversationId?: number | null): Promise<ChatReply> {
+  const result = await request<ChatReply>('/chat', {
+    message,
+    history: history.slice(-12),
+    ...(conversationId ? { conversation_id: conversationId } : {}),
+  }, signal, accessToken);
   if (typeof result.reply !== 'string' || !result.reply.trim() || typeof result.risk !== 'boolean' ||
       !['ai', 'scripted', 'crisis', 'rag', 'unavailable'].includes(result.mode)) {
     throw new ApiError('Phản hồi từ Joy chưa đầy đủ. Bạn thử gửi lại nhé.');
@@ -175,8 +207,78 @@ export async function scoreAssessment(answers: number[]): Promise<AssessmentResu
   if (!Number.isInteger(result.total) || result.total < 0 || result.total > 40 || result.maximum !== 40 ||
       typeof result.level !== 'string' || typeof result.explanation !== 'string' ||
       typeof result.needs_support !== 'boolean' || !Array.isArray(result.skills) ||
-      result.skills.some(skill => typeof skill.id !== 'string' || typeof skill.title !== 'string')) {
+      result.skills.some(skill => typeof skill.id !== 'string' || typeof skill.title !== 'string' ||
+        typeof skill.body !== 'string' || typeof skill.pages !== 'string' || typeof skill.source !== 'string')) {
     throw new ApiError('Kết quả chưa đầy đủ. Bạn thử gửi lại bài đánh giá nhé.');
   }
   return result;
+}
+
+export async function recordStorageConsent(accessToken: string): Promise<AuthUser> {
+  const result = await request<{ user: AuthUser }>('/auth/consent', {}, undefined, accessToken);
+  if (!result.user || !Number.isInteger(result.user.id) || !result.user.consent_at) {
+    throw new ApiError('Chưa ghi nhận được lựa chọn lưu lịch sử.');
+  }
+  return result.user;
+}
+
+export async function revokeStorageConsent(accessToken: string): Promise<AuthUser> {
+  const result = await request<{ user: AuthUser }>('/auth/consent/revoke', {}, undefined, accessToken);
+  if (!result.user || !Number.isInteger(result.user.id)) throw new ApiError('Chưa cập nhật được lựa chọn lưu lịch sử.');
+  return result.user;
+}
+
+export async function getLatestHistory(accessToken: string): Promise<StoredHistory> {
+  const result = await request<StoredHistory>('/history/latest', undefined, undefined, accessToken);
+  if (!Array.isArray(result.messages) ||
+      result.messages.some(message => !['user', 'assistant'].includes(message.role) || typeof message.content !== 'string')) {
+    throw new ApiError('Chưa tải được lịch sử trò chuyện.');
+  }
+  return result;
+}
+
+export async function deleteHistory(accessToken: string): Promise<void> {
+  await request<{ deleted_conversations: number }>('/history/delete', {}, undefined, accessToken);
+}
+
+export async function getConversationHistory(accessToken: string): Promise<ConversationSummary[]> {
+  const result = await request<{ conversations: ConversationSummary[] }>('/history', undefined, undefined, accessToken);
+  if (!Array.isArray(result.conversations) || result.conversations.some(item =>
+    !Number.isInteger(item.id) || typeof item.started_at !== 'string' ||
+    typeof item.messages !== 'number' || typeof item.has_risk !== 'boolean' ||
+    (item.title !== null && typeof item.title !== 'string'))) {
+    throw new ApiError('Chưa tải được danh sách lịch sử trò chuyện.');
+  }
+  return result.conversations;
+}
+
+export async function getConversation(accessToken: string, conversationId: number): Promise<StoredHistory> {
+  const result = await request<StoredHistory>(`/history/${conversationId}`, undefined, undefined, accessToken);
+  if (!Array.isArray(result.messages) || result.messages.some(message =>
+    !['user', 'assistant'].includes(message.role) || typeof message.content !== 'string')) {
+    throw new ApiError('Chưa tải được cuộc trò chuyện đã chọn.');
+  }
+  return result;
+}
+
+export type TrustedContact = { name: string; phone: string };
+
+export async function getTrustedContact(accessToken: string): Promise<TrustedContact | null> {
+  const result = await request<{ contact: TrustedContact | null }>('/profile/trusted-contact', undefined, undefined, accessToken);
+  if (result.contact !== null && (typeof result.contact?.name !== 'string' || typeof result.contact?.phone !== 'string')) {
+    throw new ApiError('Thông tin liên hệ chưa đầy đủ.');
+  }
+  return result.contact;
+}
+
+export async function saveTrustedContact(accessToken: string, contact: TrustedContact): Promise<TrustedContact> {
+  const result = await request<{ contact: TrustedContact }>('/profile/trusted-contact', contact, undefined, accessToken, 'PUT');
+  if (!result.contact || typeof result.contact.name !== 'string' || typeof result.contact.phone !== 'string') {
+    throw new ApiError('Chưa lưu được liên hệ tin cậy.');
+  }
+  return result.contact;
+}
+
+export async function deleteTrustedContact(accessToken: string): Promise<void> {
+  await request<{ contact: null }>('/profile/trusted-contact', undefined, undefined, accessToken, 'DELETE');
 }

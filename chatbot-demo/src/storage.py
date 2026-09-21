@@ -16,6 +16,7 @@ import masking
 
 __all__ = [
     "start_conversation",
+    "save_turn",
     "save_message",
     "list_conversations",
     "load_messages",
@@ -78,6 +79,73 @@ def save_message(
     return row[0] if row else None
 
 
+def save_turn(
+    user_id: int,
+    conversation_id: int,
+    user_text: str,
+    assistant_text: str,
+    user_meta: dict = None,
+    assistant_meta: dict = None,
+    is_risk: bool = False,
+    risk_layer: str = None,
+    intent: str = None,
+    reply_source: str = None,
+) -> int:
+    """Luu tron ven mot luot chat va tra ve id hoi thoai."""
+    masked_user = masking.mask_text(user_text or "")
+    masked_assistant = masking.mask_text(assistant_text or "")
+    title = masked_user[:120] or None
+
+    with db.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT consent_at FROM users WHERE id = %s FOR UPDATE", (user_id,))
+            consent_row = cursor.fetchone()
+            if consent_row is None or consent_row[0] is None:
+                raise PermissionError("Người dùng chưa đồng ý lưu lịch sử.")
+
+            if conversation_id is None:
+                cursor.execute(
+                    "INSERT INTO conversations (user_id, title) VALUES (%s, %s) RETURNING id",
+                    (user_id, title),
+                )
+                conversation_id = cursor.fetchone()[0]
+            else:
+                cursor.execute(
+                    "SELECT id FROM conversations WHERE id = %s AND user_id = %s FOR UPDATE",
+                    (conversation_id, user_id),
+                )
+                if cursor.fetchone() is None:
+                    raise ValueError("Không tìm thấy cuộc trò chuyện.")
+
+            cursor.execute(
+                "INSERT INTO messages "
+                "(conversation_id, role, content, is_risk, risk_layer, intent, meta) "
+                "VALUES (%s, 'user', %s, %s, %s, %s, %s::jsonb)",
+                (
+                    conversation_id,
+                    masked_user,
+                    is_risk,
+                    risk_layer,
+                    intent,
+                    json.dumps(user_meta or {}, ensure_ascii=False),
+                ),
+            )
+            cursor.execute(
+                "INSERT INTO messages "
+                "(conversation_id, role, content, is_risk, reply_source, meta) "
+                "VALUES (%s, 'assistant', %s, %s, %s, %s::jsonb)",
+                (
+                    conversation_id,
+                    masked_assistant,
+                    is_risk,
+                    reply_source,
+                    json.dumps(assistant_meta or {}, ensure_ascii=False),
+                ),
+            )
+        conn.commit()
+    return conversation_id
+
+
 def list_conversations(user_id: int, limit: int = None) -> "list[dict]":
     limit = limit or config.HISTORY_MAX_CONVERSATIONS
     with db.connection() as conn:
@@ -87,7 +155,7 @@ def list_conversations(user_id: int, limit: int = None) -> "list[dict]":
                 "       coalesce(bool_or(m.is_risk), false) "
                 "FROM conversations c LEFT JOIN messages m ON m.conversation_id = c.id "
                 "WHERE c.user_id = %s "
-                "GROUP BY c.id ORDER BY c.started_at DESC LIMIT %s",
+                "GROUP BY c.id ORDER BY max(m.created_at) DESC NULLS LAST, c.started_at DESC LIMIT %s",
                 (user_id, limit),
             )
             rows = cursor.fetchall()
@@ -129,6 +197,44 @@ def load_messages(user_id: int, conversation_id: int, limit: int = None) -> "lis
         }
         for row in rows
     ]
+
+
+def get_trusted_contact(user_id: int) -> dict | None:
+    with db.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT trusted_contact_name, trusted_contact_phone FROM users WHERE id = %s",
+                (user_id,),
+            )
+            row = cursor.fetchone()
+    if row is None or not row[0] or not row[1]:
+        return None
+    return {"name": row[0], "phone": row[1]}
+
+
+def save_trusted_contact(user_id: int, name: str, phone: str) -> dict:
+    with db.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE users SET trusted_contact_name = %s, trusted_contact_phone = %s "
+                "WHERE id = %s RETURNING trusted_contact_name, trusted_contact_phone",
+                (name, phone, user_id),
+            )
+            row = cursor.fetchone()
+        conn.commit()
+    if row is None:
+        raise ValueError("Không tìm thấy tài khoản.")
+    return {"name": row[0], "phone": row[1]}
+
+
+def delete_trusted_contact(user_id: int) -> None:
+    with db.connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE users SET trusted_contact_name = NULL, trusted_contact_phone = NULL WHERE id = %s",
+                (user_id,),
+            )
+        conn.commit()
 
 
 def delete_conversation(user_id: int, conversation_id: int) -> int:

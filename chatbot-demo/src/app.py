@@ -1,5 +1,6 @@
-import os
+import logging
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -12,10 +13,11 @@ import chat_pipeline
 import config
 import db
 import guardrails
-import knn_router
 import llm
 import rag_engine
 import storage
+
+logger = logging.getLogger(__name__)
 
 STAGE_DISCLAIMER = "disclaimer"
 STAGE_CHAT = "chat"
@@ -70,45 +72,31 @@ def storage_ready() -> bool:
     return bool(user and user.get("consent_at") and db.is_configured())
 
 
-def ensure_conversation():
-    if not storage_ready():
-        return None
-    if st.session_state.get("conversation_id") is None:
-        st.session_state.conversation_id = storage.start_conversation(
-            current_user()["id"]
-        )
-    return st.session_state.conversation_id
-
-
 def persist_turn(user_text, risk_outcome, intent_decision, reply, reply_source, retrieval):
     if not storage_ready():
+        logger.info("chat history persistence skipped reason=no_consent_or_guest")
         return
 
     user = current_user()
     try:
-        conversation_id = ensure_conversation()
-        storage.save_message(
-            user["id"],
-            conversation_id,
-            "user",
-            user_text,
-            meta=storage.build_user_meta(risk_outcome, intent_decision),
+        conversation_id = storage.save_turn(
+            user_id=user["id"],
+            conversation_id=st.session_state.get("conversation_id"),
+            user_text=user_text,
+            assistant_text=reply or "",
+            user_meta=storage.build_user_meta(risk_outcome, intent_decision),
+            assistant_meta=storage.build_assistant_meta(retrieval, reply_source),
             is_risk=bool((risk_outcome or {}).get("risk")),
             risk_layer=(risk_outcome or {}).get("layer"),
             intent=(intent_decision or {}).get("intent"),
+            reply_source=reply_source,
         )
-        if reply is not None:
-            storage.save_message(
-                user["id"],
-                conversation_id,
-                "assistant",
-                reply,
-                meta=storage.build_assistant_meta(retrieval, reply_source),
-                reply_source=reply_source,
-            )
+        st.session_state.conversation_id = conversation_id
         st.session_state.storage_error = ""
-    except Exception as error:
-        st.session_state.storage_error = "{0}: {1}".format(type(error).__name__, error)
+        logger.info("chat turn saved user_id=%s conversation_id=%s", user["id"], conversation_id)
+    except Exception:
+        logger.exception("chat history persistence failed user_id=%s", user["id"])
+        st.session_state.storage_error = "Lịch sử chưa lưu được. Bạn có thể thử lại sau."
 
 
 def add_message(role: str, content: str) -> None:
@@ -130,10 +118,23 @@ def handle_user_text(text: str) -> None:
     if not text:
         return
 
-    risk_detected = run_guardrails(text)
-
+    started = time.perf_counter()
+    user = current_user()
+    logger.info(
+        "chat submit started user_id=%s chars=%d history_messages=%d",
+        user.get("id") if user else None,
+        len(text),
+        len(st.session_state.messages),
+    )
     add_message("user", text)
     st.session_state.user_turns += 1
+    try:
+        risk_detected = run_guardrails(text)
+    except Exception:
+        logger.exception("chat processing stopped because safety assessment failed")
+        add_message("assistant", "Joy chưa thể kiểm tra an toàn cho tin nhắn này. Bạn thử lại sau nhé.")
+        logger.info("chat submit finished route=safety_error elapsed_ms=%.1f", (time.perf_counter() - started) * 1000)
+        return
 
     if risk_detected:
         persist_turn(
@@ -144,6 +145,7 @@ def handle_user_text(text: str) -> None:
             "crisis_block",
             None,
         )
+        logger.info("chat submit finished route=crisis elapsed_ms=%.1f", (time.perf_counter() - started) * 1000)
         return
 
     if st.session_state.stage == STAGE_ASSESSMENT:
@@ -154,24 +156,35 @@ def handle_user_text(text: str) -> None:
                 stop=config.ASSESSMENT_STOP_LABEL
             ),
         )
+        logger.info("chat submit finished route=assessment elapsed_ms=%.1f", (time.perf_counter() - started) * 1000)
         return
 
     if st.session_state.consent_pending:
         lowered = text.casefold()
         if any(word in lowered for word in ("không", "thôi", "chưa", "để sau")):
             decline_assessment()
+            logger.info("chat submit finished route=assessment_declined elapsed_ms=%.1f", (time.perf_counter() - started) * 1000)
             return
         if any(word in lowered for word in ("có", "ok", "đồng ý", "thử", "được")):
             start_assessment()
+            logger.info("chat submit finished route=assessment_started elapsed_ms=%.1f", (time.perf_counter() - started) * 1000)
             return
 
     history = st.session_state.messages[:-1]
-    result = chat_pipeline.generate_reply(text, history, include_citation=True)
-    content = result["reply"]
-    source = result["reply_source"]
-    st.session_state.last_intent = result["intent"]
-    st.session_state.last_retrieval = result["retrieval"]
-    decision = result["intent_decision"]
+    try:
+        result = chat_pipeline.generate_reply(text, history, include_citation=True)
+        content = result["reply"]
+        source = result["reply_source"]
+        st.session_state.last_intent = result["intent"]
+        st.session_state.last_retrieval = result["retrieval"]
+        decision = result["intent_decision"]
+    except Exception:
+        logger.exception("chat processing failed during intent or response generation")
+        content = "Joy chưa tạo được phản hồi lúc này. Bạn thử gửi lại sau nhé."
+        source = "error"
+        st.session_state.last_intent = None
+        st.session_state.last_retrieval = None
+        decision = None
     st.session_state.last_intent_decision = decision
 
     st.session_state.reply_source = source
@@ -186,7 +199,14 @@ def handle_user_text(text: str) -> None:
         st.session_state.get("last_retrieval"),
     )
 
-    maybe_offer_assessment(text)
+    if source != "error":
+        maybe_offer_assessment(text)
+    logger.info(
+        "chat submit finished intent=%s source=%s elapsed_ms=%.1f",
+        st.session_state.last_intent,
+        source,
+        (time.perf_counter() - started) * 1000,
+    )
 
 
 def answer_from_documents(question: str, history) -> "tuple[str, str]":
@@ -403,14 +423,6 @@ def render_disclaimer() -> None:
     )
 
 
-def debug_sidebar_enabled() -> bool:
-    return os.getenv(config.DEBUG_SIDEBAR_ENV, "false").strip().casefold() in {
-        "1",
-        "true",
-        "yes",
-    }
-
-
 def cb_logout() -> None:
     st.session_state.auth_user = None
     st.session_state.conversation_id = None
@@ -426,8 +438,9 @@ def do_login(username: str, password: str) -> None:
         st.session_state.conversation_id = None
     except auth.AuthError as error:
         st.session_state.auth_error = str(error)
-    except Exception as error:
-        st.session_state.auth_error = "Không kết nối được cơ sở dữ liệu: {0}".format(error)
+    except Exception:
+        logger.exception("account login failed")
+        st.session_state.auth_error = "Dịch vụ tài khoản tạm thời chưa khả dụng. Bạn thử lại sau nhé."
 
 
 def do_register(username: str, password: str, confirm: str) -> None:
@@ -442,33 +455,48 @@ def do_register(username: str, password: str, confirm: str) -> None:
         st.session_state.conversation_id = None
     except auth.AuthError as error:
         st.session_state.auth_error = str(error)
-    except Exception as error:
-        st.session_state.auth_error = "Không kết nối được cơ sở dữ liệu: {0}".format(error)
+    except Exception:
+        logger.exception("account registration failed")
+        st.session_state.auth_error = "Dịch vụ tài khoản tạm thời chưa khả dụng. Bạn thử lại sau nhé."
 
 
 def cb_accept_storage_consent() -> None:
     user = current_user()
     if not user:
         return
-    auth.record_consent(user["id"])
-    st.session_state.auth_user = auth.get_user(user["id"])
+    try:
+        auth.record_consent(user["id"])
+        st.session_state.auth_user = auth.get_user(user["id"])
+    except Exception:
+        logger.exception("storage consent update failed user_id=%s", user["id"])
+        st.session_state.auth_error = "Không thể cập nhật lựa chọn lưu lịch sử. Bạn thử lại sau nhé."
 
 
 def cb_delete_all_history() -> None:
     user = current_user()
     if not user:
         return
-    storage.delete_all_history(user["id"])
-    st.session_state.conversation_id = None
-    st.session_state.viewing_conversation = None
+    try:
+        storage.delete_all_history(user["id"])
+        st.session_state.conversation_id = None
+        st.session_state.viewing_conversation = None
+        logger.info("chat history deleted user_id=%s", user["id"])
+    except Exception:
+        logger.exception("chat history deletion failed user_id=%s", user["id"])
+        st.session_state.storage_error = "Chưa xoá được lịch sử. Bạn thử lại sau nhé."
 
 
 def cb_delete_account() -> None:
     user = current_user()
     if not user:
         return
-    auth.delete_user(user["id"])
-    cb_logout()
+    try:
+        auth.delete_user(user["id"])
+        logger.info("account deleted user_id=%s", user["id"])
+        cb_logout()
+    except Exception:
+        logger.exception("account deletion failed user_id=%s", user["id"])
+        st.session_state.auth_error = "Chưa xoá được tài khoản. Bạn thử lại sau nhé."
 
 
 def cb_view_conversation(conversation_id: int) -> None:
@@ -513,8 +541,9 @@ def render_history_sidebar() -> None:
     user = current_user()
     try:
         conversations = storage.list_conversations(user["id"])
-    except Exception as error:
-        st.error("Không đọc được lịch sử: {0}".format(error), icon="⚠️")
+    except Exception:
+        logger.exception("chat history list failed user_id=%s", user["id"])
+        st.error("Chưa đọc được lịch sử. Bạn thử lại sau nhé.", icon="⚠️")
         return
 
     st.caption("Lịch sử trò chuyện ({0} phiên gần nhất)".format(len(conversations)))
@@ -557,6 +586,9 @@ def render_auth_sidebar() -> None:
     st.success("Đang đăng nhập: {0}".format(user["username"]), icon="👤")
     st.button("Đăng xuất", on_click=cb_logout)
 
+    if st.session_state.get("auth_error"):
+        st.error(st.session_state.auth_error, icon="⚠️")
+
     if not user.get("consent_at"):
         render_storage_consent()
         return
@@ -573,8 +605,13 @@ def render_history_view(conversation_id: int) -> None:
 
     try:
         messages = storage.load_messages(user["id"], conversation_id)
-    except Exception as error:
-        st.error("Không đọc được phiên này: {0}".format(error), icon="⚠️")
+    except Exception:
+        logger.exception(
+            "chat history detail failed user_id=%s conversation_id=%s",
+            user["id"],
+            conversation_id,
+        )
+        st.error("Chưa đọc được phiên trò chuyện. Bạn thử lại sau nhé.", icon="⚠️")
         return
 
     if not messages:
@@ -584,207 +621,18 @@ def render_history_view(conversation_id: int) -> None:
     for item in messages:
         with st.chat_message(item["role"]):
             st.markdown(item["content"])
-            details = []
-            if item["role"] == "user":
-                if item["is_risk"]:
-                    details.append("nguy cơ: có (lớp {0})".format(item["risk_layer"]))
-                if item["intent"]:
-                    details.append("ý định: {0}".format(item["intent"]))
-            elif item["reply_source"]:
-                details.append("nguồn trả lời: {0}".format(item["reply_source"]))
-                hits = (item["meta"] or {}).get("rag", {}).get("hits") or []
-                for hit in hits:
-                    details.append(
-                        "WHO {0} trang {1} (score {2:.2f})".format(
-                            hit.get("skill"), hit.get("pages"), hit.get("score") or 0
-                        )
-                    )
-            if details:
-                st.caption(" | ".join(details))
 
 
 def render_sidebar() -> None:
     with st.sidebar:
         st.subheader(config.APP_TITLE)
         st.caption(
-            "Hội thoại chỉ nằm trong phiên làm việc này, không ghi ra file "
-            "hay cơ sở dữ liệu, và sẽ mất khi bạn đóng tab."
+            "Lịch sử được lưu khi bạn đăng nhập và đồng ý lưu. Ở chế độ khách, "
+            "hội thoại chỉ tồn tại trong phiên làm việc này."
         )
         st.button("Xóa phiên và bắt đầu lại", on_click=cb_request_reset)
 
         render_auth_sidebar()
-
-        if debug_sidebar_enabled():
-            render_debug_sidebar()
-
-
-def render_debug_sidebar() -> None:
-    with st.sidebar:
-        st.divider()
-        st.subheader("Trạng thái hệ thống (dev)")
-        st.caption("Chỉ hiện khi biến môi trường DEBUG_SIDEBAR=true.")
-
-        if guardrails.is_configured():
-            st.success("Guardrails lớp 1: đã nạp từ khóa nguy cơ", icon="✅")
-        else:
-            st.error(
-                "Guardrails lớp 1 CHƯA có từ khóa nào. Điền vào "
-                "`src/guardrails_keywords.py` trước khi demo.",
-                icon="⚠️",
-            )
-        st.caption(
-            "Guardrails lớp 2: {model} (chỉ gọi khi lớp 1 không khớp)".format(
-                model=config.GROQ_RISK_MODEL
-            )
-        )
-
-        risk = st.session_state.get("last_risk")
-        if risk:
-            st.caption(
-                "Lượt gần nhất: risk={risk} | lớp chặn={layer} | confidence={conf}".format(
-                    risk=risk.get("risk"),
-                    layer=risk.get("layer") or "-",
-                    conf=risk.get("confidence") or "-",
-                )
-            )
-            if risk.get("error"):
-                st.caption("Lỗi lớp 2 (đã fail-safe): " + str(risk["error"])[:160])
-
-            knn = risk.get("knn")
-            if knn:
-                st.caption(
-                    "Lớp 1b (kNN): {votes}/{k} phiếu nguy cơ | score={score} | "
-                    "ngưỡng={threshold}".format(
-                        votes=knn.get("votes"),
-                        k=knn.get("k"),
-                        score="-" if knn.get("score") is None else "{0:.3f}".format(knn["score"]),
-                        threshold=knn.get("threshold"),
-                    )
-                )
-                if knn.get("nearest_text"):
-                    st.caption(
-                        "Câu mẫu gần nhất: `{id}` ({label}) - {text}".format(
-                            id=knn.get("nearest_id"),
-                            label=knn.get("nearest_label"),
-                            text=str(knn["nearest_text"])[:90],
-                        )
-                    )
-                if knn.get("error"):
-                    st.caption("Lỗi lớp 1b (đã bỏ qua kNN): " + str(knn["error"])[:160])
-
-        if llm.is_available():
-            st.info("LLM: Groq / {model}".format(model=config.GROQ_MODEL), icon="🤖")
-        else:
-            st.info(
-                "LLM: chưa có {env} trong .env -> đang dùng phản hồi kịch bản "
-                "sẵn.".format(env=config.GROQ_API_KEY_ENV),
-                icon="📝",
-            )
-        if llm.last_error():
-            st.caption("Lỗi gọi LLM gần nhất: " + llm.last_error())
-
-        render_rag_status()
-
-        st.divider()
-        if llm.last_mapping_error():
-            st.caption("Lỗi map Likert gần nhất: " + llm.last_mapping_error())
-
-
-def render_rag_status() -> None:
-    try:
-        status = rag_engine.store_status()
-    except Exception as error:
-        st.error("Khong doc duoc trang thai RAG: {0}".format(error), icon="⚠️")
-        return
-
-    if not status["has_gemini_key"]:
-        st.error(
-            "RAG: chưa có {env} trong .env -> luồng tư vấn sẽ báo lỗi, không "
-            "trả lời được.".format(env=config.GEMINI_API_KEY_ENV),
-            icon="⚠️",
-        )
-    elif status["needs_indexing"]:
-        st.warning(
-            "RAG: vector store chưa có hoặc tài liệu đã thay đổi, cần index.",
-            icon="🗂️",
-        )
-    else:
-        st.success(
-            "RAG: {n} chunk trong vector store".format(n=status["chunks"]), icon="✅"
-        )
-
-    if status["has_gemini_key"]:
-        if st.button("Index lại tài liệu WHO", disabled=not status["needs_indexing"]):
-            with st.spinner("Đang index tài liệu, việc này chỉ làm một lần..."):
-                try:
-                    result = rag_engine.index_if_needed(force=True)
-                    st.success("Đã index {0} chunk.".format(result["chunks"]))
-                except Exception as error:
-                    st.error("Index thất bại: {0}".format(error))
-
-    try:
-        knn_status = knn_router.store_status()
-    except Exception as error:
-        knn_status = None
-        st.error("Lớp 1b (kNN): không đọc được trạng thái - {0}".format(error), icon="⚠️")
-
-    if knn_status:
-        if knn_status["needs_indexing"] or not knn_status["examples"]:
-            st.warning(
-                "Lớp 1b (kNN): bộ câu mẫu chưa index -> lớp này đang TẮT, "
-                "chỉ còn lớp từ khoá và lớp LLM.",
-                icon="🗂️",
-            )
-        else:
-            st.success(
-                "Lớp 1b (kNN): {n} câu mẫu trong vector store".format(n=knn_status["examples"]),
-                icon="✅",
-            )
-
-        if knn_status["has_gemini_key"]:
-            if st.button(
-                "Index lại bộ câu mẫu kNN",
-                disabled=not (knn_status["needs_indexing"] or not knn_status["examples"]),
-            ):
-                with st.spinner("Đang embed bộ câu mẫu..."):
-                    try:
-                        result = knn_router.index_examples(force=True)
-                        st.success("Đã index {0} câu mẫu.".format(result["examples"]))
-                    except Exception as error:
-                        st.error("Index câu mẫu thất bại: {0}".format(error))
-
-    intent = st.session_state.get("last_intent")
-    if intent:
-        st.caption("Ý định lượt gần nhất: {0}".format(intent))
-        decision = st.session_state.get("last_intent_decision")
-        if decision:
-            st.caption(
-                "Kiểm chéo: LLM={llm} | kNN={knn} ({score}) | luật={policy} | đồng thuận={agreed}".format(
-                    llm=decision.get("llm_intent") or "-",
-                    knn=decision.get("knn_intent") or "-",
-                    score="-" if decision.get("knn_score") is None else "{0:.3f}".format(decision["knn_score"]),
-                    policy=decision.get("policy"),
-                    agreed=decision.get("agreed"),
-                )
-            )
-        if llm.last_intent_error():
-            st.caption("Lỗi classify_intent gần nhất: " + llm.last_intent_error())
-
-    outcome = st.session_state.get("last_retrieval")
-    if outcome:
-        score = outcome.get("top_score")
-        st.caption(
-            "Lượt truy hồi gần nhất: nguồn={source} | in_scope={scope} | "
-            "score cao nhất={score} | ngưỡng={threshold}".format(
-                source=outcome.get("source"),
-                scope=outcome.get("in_scope"),
-                score="{0:.3f}".format(score) if isinstance(score, float) else "-",
-                threshold=config.RAG_SIMILARITY_THRESHOLD,
-            )
-        )
-        if outcome.get("error"):
-            st.caption("Lỗi RAG gần nhất: " + str(outcome["error"]))
-
 
 def render_messages() -> None:
     for message in st.session_state.messages:
@@ -934,6 +782,7 @@ def render_result() -> None:
     try:
         summaries = rag_engine.skill_summaries(config.LEVEL_TO_SKILLS[level])
     except Exception:
+        logger.exception("assessment recommendation retrieval failed skills=%s", config.LEVEL_TO_SKILLS[level])
         summaries = []
 
     if not summaries:

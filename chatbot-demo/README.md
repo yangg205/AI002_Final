@@ -31,14 +31,30 @@ curl -X POST http://localhost:8000/api/chat \
 ```
 
 Available endpoints: `GET /api/health`, `POST /api/chat`,
-`GET /api/assessment/questions`, and
-`POST /api/assessment/score`. Set `API_CORS_ORIGINS` to the frontend origin(s)
-in production instead of `*`.
+`GET /api/assessment/questions`, and `POST /api/assessment/score`. Each chat
+turn passes the safety guardrails first, then intent classification (LLM with
+the kNN router). Advice questions retrieve matching WHO guide passages before
+the answer is generated and cited; emotional sharing uses the conversation
+response path. Set `API_CORS_ORIGINS` to the frontend origin(s) in production
+instead of `*`.
 
-Account endpoints: `POST /api/auth/register`, `POST /api/auth/login`, and
-`GET /api/auth/me`. Registration and login return an access token; send it as
-`Authorization: Bearer <access_token>` to the `me` endpoint. Tokens expire
-after 24 hours.
+Account endpoints: `POST /api/auth/register`, `POST /api/auth/login`,
+`GET /api/auth/me`, `POST /api/auth/consent`, and
+`POST /api/auth/consent/revoke`. Registration and login return an access token;
+send it as `Authorization: Bearer <access_token>` to authenticated endpoints.
+Tokens expire after 24 hours. With history consent enabled, use
+`GET /api/history` to list conversations, `GET /api/history/{id}` to reopen one,
+`GET /api/history/latest` to restore the latest, and
+`POST /api/history/delete` to clear saved history. Trusted contacts are stored
+per account through `GET`, `PUT`, and `DELETE /api/profile/trusted-contact`.
+
+The app and API log request status, chat pipeline stages, retrieval outcomes,
+database persistence, fallbacks, and exceptions to terminal output. They do not
+log chat message contents. For Docker, view both services with
+`docker compose logs -f app api`; filter to the API with
+`docker compose logs -f api`. For a local run, start the API with
+`uvicorn src.api:app --reload --port 8000` and Streamlit in another terminal.
+Set `LOG_LEVEL=DEBUG` when you need more detailed diagnostics.
 Usernames must be 3–32 characters. Passwords need at least 8 characters and
 can use up to 72 UTF-8 bytes.
 
@@ -70,13 +86,13 @@ python3 tools/index_examples.py     # labeled examples -> collection knn_example
 streamlit run src/app.py
 ```
 
-Skipping the two index commands leaves the advice flow returning a technical
-error and **silently disables guardrail layer 1b**. The Docker entrypoint runs
-both for you; a manual run does not.
+Skipping the two index commands leaves the advice flow without WHO passages and
+**silently disables guardrail layer 1b**. The app shows a short user-facing
+notice; the technical reason is written to the terminal. The Docker entrypoint
+runs both indexes for you; a manual run does not.
 
 ```bash
 streamlit run src/app.py --server.port 8502
-DEBUG_SIDEBAR=true streamlit run src/app.py
 ```
 
 ## Build and inspect the RAG index
@@ -135,7 +151,7 @@ detail is overwritten in `eval/output/csv/`.
 | `DATABASE_URL` | — | Postgres connection string for login and history. Without it the app runs in guest-only mode. |
 | `API_CORS_ORIGINS` | `*` | Comma-separated frontend origins allowed to call the API. |
 | `AUTH_TOKEN_SECRET` | — | Required by the account API. Generate one with `openssl rand -hex 32`; keep it private and stable so active tokens remain valid. |
-| `DEBUG_SIDEBAR` | `false` | Shows the debug sidebar (guardrails / LLM / RAG status, manual reindex buttons). |
+| `LOG_LEVEL` | `INFO` | Terminal logging level for app and API (`DEBUG`, `INFO`, `WARNING`, or `ERROR`). |
 
 Guests are never persisted: their turns live only in `st.session_state` and are
 gone when the tab closes. A signed-in user who accepts the storage consent gets

@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import unicodedata
 from functools import lru_cache
@@ -20,6 +21,7 @@ __all__ = [
 
 
 _WHITESPACE_RE = re.compile(r"\s+", re.UNICODE)
+_LOGGER = logging.getLogger(__name__)
 
 
 def _normalize(text: str) -> str:
@@ -189,6 +191,7 @@ def classify_risk(text: str) -> dict:
             "error": None,
         }
     except Exception as error:
+        _LOGGER.exception("LLM risk check failed; fail-safe block enabled")
         return {
             "risk": True,
             "confidence": "low",
@@ -287,4 +290,3 @@ def crisis_message_lines() -> "list[str]":
     if closing:
         lines.append(closing)
     return [line for line in lines if line]
-

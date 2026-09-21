@@ -11,6 +11,7 @@ gio duoc ghi xuong dia - dung nguyen tac khong luu hoi thoai cua du an.
 
 import hashlib
 import json
+import logging
 from functools import lru_cache
 
 import config
@@ -40,6 +41,15 @@ class KnnUnavailable(RuntimeError):
 
 
 _collection_singleton = None
+_LOGGER = logging.getLogger(__name__)
+_LOGGED_UNREADY_KINDS = set()
+
+
+def _log_unready_once(kind: str, reason: str) -> None:
+    label = kind or "all"
+    if label not in _LOGGED_UNREADY_KINDS:
+        _LOGGER.warning("kNN router unavailable: kind=%s reason=%s", label, reason)
+        _LOGGED_UNREADY_KINDS.add(label)
 
 
 def load_examples(split: str = None, kind: str = None) -> "list[dict]":
@@ -204,17 +214,31 @@ def store_status() -> dict:
 def is_ready(kind: str = None) -> bool:
     try:
         if needs_indexing():
+            _log_unready_once(kind, "index_required")
             return False
-    except Exception:
+    except Exception as error:
+        _LOGGER.warning(
+            "kNN readiness check failed: kind=%s error=%s: %s",
+            kind or "all",
+            type(error).__name__,
+            rag_engine._redact_gemini_api_key(str(error)),
+        )
         return False
     if example_count() <= 0:
+        _log_unready_once(kind, "empty_index")
         return False
     if kind is None:
         return True
     try:
         payload = _collection().get(where={"kind": kind}, include=[])
         return bool(payload.get("ids"))
-    except Exception:
+    except Exception as error:
+        _LOGGER.warning(
+            "kNN readiness check failed: kind=%s error=%s: %s",
+            kind or "all",
+            type(error).__name__,
+            rag_engine._redact_gemini_api_key(str(error)),
+        )
         return False
 
 
@@ -410,7 +434,9 @@ def reconcile_intent(llm_intent: str, text: str = None, policy: str = None) -> d
 
 
 def _failed(payload: dict, error: Exception) -> dict:
-    payload["error"] = "{name}: {msg}".format(name=type(error).__name__, msg=error)
+    details = rag_engine._redact_gemini_api_key(str(error))
+    _LOGGER.warning("kNN vote failed: error=%s: %s", type(error).__name__, details)
+    payload["error"] = "{name}: {msg}".format(name=type(error).__name__, msg=details)
     return payload
 
 

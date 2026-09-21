@@ -23,6 +23,7 @@ import { AlertScreen } from './src/screens/AlertScreen';
 import { ChatScreen } from './src/screens/ChatScreen';
 import { ExercisesScreen } from './src/screens/ExercisesScreen';
 import { StressCheckScreen } from './src/screens/StressCheckScreen';
+import type { ExerciseRecommendationId } from './src/services/moodCheckins';
 import { colors } from './src/theme/colors';
 import type { AuthUser } from './src/services/api';
 import { activateAccountSettings, saveAccountSettings } from './src/services/accountSettings';
@@ -52,15 +53,18 @@ function TabScene({ active, children, tab }: TabSceneProps) {
 function AppShell() {
   const insets = useSafeAreaInsets();
   const toastId = useRef(0);
+  const handoffId = useRef(0);
   const [activeTab, setActiveTab] = useState<AppTab>(DEFAULT_TAB);
   const [authComplete, setAuthComplete] = useState(false);
   const [showAccountInfo, setShowAccountInfo] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
-  const [, setAccessToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [historyRevision, setHistoryRevision] = useState(0);
   const [, setApiBaseUrlState] = useState(getApiBaseUrl);
   const [settingsReady, setSettingsReady] = useState(false);
-  const [assessmentRequest, setAssessmentRequest] = useState(0);
   const [toast, setToast] = useState<ToastMessage | null>(null);
+  const [exerciseRequest, setExerciseRequest] = useState<{ id: number; exerciseId: ExerciseRecommendationId } | null>(null);
+  const [stressHandoff, setStressHandoff] = useState<{ id: number; text: string } | null>(null);
 
   const showToast = useCallback((text: string) => {
     toastId.current += 1;
@@ -74,6 +78,17 @@ function AppShell() {
   const handleServerUrlSave = useCallback((url: string) => {
     if (authUser) void saveAccountSettings(String(authUser.id), { apiBaseUrl: url });
   }, [authUser]);
+  const handleOpenSuggestedExercise = useCallback((exerciseId: ExerciseRecommendationId) => {
+    handoffId.current += 1;
+    setExerciseRequest({ id: handoffId.current, exerciseId });
+    setActiveTab('exercises');
+  }, []);
+  const handleShareStressWithJoy = useCallback((text: string) => {
+    handoffId.current += 1;
+    setStressHandoff({ id: handoffId.current, text });
+    setActiveTab('chat');
+    showToast('Đã đưa lần đo vào tin nhắn. Bạn xem lại rồi gửi cho Joy nhé.');
+  }, [showToast]);
 
   if (!authComplete) {
     return (
@@ -106,49 +121,68 @@ function AppShell() {
         />
       </SafeAreaView>
 
-      {showAccountInfo ? (
-        <AccountInfoScreen
-          user={authUser}
-          onBack={() => setShowAccountInfo(false)}
-          onLogout={() => {
-            setShowAccountInfo(false);
-            setAuthComplete(false);
-            setAuthUser(null);
-            setAccessToken(null);
-          }}
-        />
-      ) : <View style={styles.scenes}>
+      <View style={[styles.scenes, showAccountInfo && styles.hiddenScene]}>
         <TabScene active={activeTab === 'chat'} tab="chat">
           <ChatScreen
             active={activeTab === 'chat' && settingsReady}
             onNotify={showToast}
             onNavigate={setActiveTab}
-            onRequestAssessment={() => {
-              setAssessmentRequest(value => value + 1);
-              setActiveTab('stress');
-            }}
             username={authUser?.username}
             accountKey={authUser ? String(authUser.id) : 'guest'}
+            accessToken={accessToken ?? undefined}
+            consentAt={authUser?.consent_at ?? null}
+            stressHandoff={stressHandoff}
+            onConsentChange={setAuthUser}
+            historyRevision={historyRevision}
             onServerUrlChange={handleServerUrlChange}
             onServerUrlSave={handleServerUrlSave}
           />
         </TabScene>
 
         <TabScene active={activeTab === 'stress'} tab="stress">
-          <StressCheckScreen onNotify={showToast} onNavigate={setActiveTab} assessmentRequest={assessmentRequest} />
+          <StressCheckScreen
+            accountKey={authUser ? String(authUser.id) : 'guest'}
+            onNotify={showToast}
+            onOpenExercise={handleOpenSuggestedExercise}
+            onShareWithJoy={handleShareStressWithJoy}
+          />
         </TabScene>
 
         <TabScene active={activeTab === 'exercises'} tab="exercises">
-          <ExercisesScreen active={activeTab === 'exercises'} onNotify={showToast} />
+          <ExercisesScreen active={activeTab === 'exercises'} onNotify={showToast} recommendationRequest={exerciseRequest} />
         </TabScene>
 
         <TabScene active={activeTab === 'alerts'} tab="alerts">
           <AlertScreen
             onNavigate={setActiveTab}
             onNotify={showToast}
+            accountKey={authUser ? String(authUser.id) : 'guest'}
+            accessToken={accessToken ?? undefined}
+            active={activeTab === 'alerts' && settingsReady}
           />
         </TabScene>
-      </View>}
+      </View>
+
+      {showAccountInfo && <AccountInfoScreen
+          user={authUser}
+          accessToken={accessToken ?? undefined}
+          onUserChange={updated => {
+            const reenabled = !authUser?.consent_at && !!updated.consent_at;
+            setAuthUser(updated);
+            if (reenabled) setHistoryRevision(value => value + 1);
+          }}
+          onHistoryDeleted={() => setHistoryRevision(value => value + 1)}
+          onBack={() => setShowAccountInfo(false)}
+          onLogout={() => {
+            setShowAccountInfo(false);
+            setAuthComplete(false);
+            setAuthUser(null);
+            setAccessToken(null);
+            setStressHandoff(null);
+            setExerciseRequest(null);
+            setSettingsReady(false);
+          }}
+        />}
 
       {!showAccountInfo && <SafeAreaView edges={['bottom']} style={styles.navigationSafeArea}>
         <AppBottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />

@@ -2,7 +2,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -85,15 +84,7 @@ export function AuthScreen({ onAuthenticated, onContinueAsGuest }: AuthScreenPro
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.content}>
-          <View style={styles.brandMark}>
-            <Image
-              accessibilityLabel="Linh vật JoyfulMind"
-              accessible
-              resizeMode="contain"
-              source={require('../../assets/illustrations/joy-mascot.png')}
-              style={styles.mascot}
-            />
-          </View>
+          <View style={styles.brandMark}><Ionicons color={colors.olive} name="leaf-outline" size={34} /></View>
           <Text accessibilityRole="header" style={styles.brand}>JoyfulMind</Text>
           <Text style={styles.tagline}>Một góc nhỏ để lắng nghe chính mình</Text>
 
@@ -211,7 +202,7 @@ export function AuthScreen({ onAuthenticated, onContinueAsGuest }: AuthScreenPro
               style={({ pressed }) => [styles.submitButton, pressed && !busy && styles.pressed, busy && styles.disabled]}
               testID="auth-submit"
             >
-              {busy ? <ActivityIndicator color={colors.darkText} /> : <>
+              {busy ? <ActivityIndicator color={colors.white} /> : <>
                 <Text style={styles.submitText}>{mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản'}</Text>
                 <Ionicons color={colors.darkText} name="arrow-forward" size={20} />
               </>}
@@ -235,28 +226,27 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
   scrollContent: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 22, paddingVertical: 30 },
   content: { width: '100%', maxWidth: 480, alignSelf: 'center', alignItems: 'center' },
-  brandMark: { width: 86, height: 86, borderRadius: 43, backgroundColor: '#FFF0B9', borderWidth: 5, borderColor: colors.white, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', shadowColor: '#7B6500', shadowOpacity: 0.1, shadowRadius: 12, elevation: 3 },
-  mascot: { width: 78, height: 78 },
-  brand: { marginTop: 9, color: colors.oliveDark, fontSize: 29, fontWeight: '800', letterSpacing: -0.6 },
+  brandMark: { width: 58, height: 58, borderRadius: 16, backgroundColor: colors.cream, alignItems: 'center', justifyContent: 'center' },
+  brand: { marginTop: 12, color: colors.black, fontSize: 25, fontWeight: '700', letterSpacing: -0.3 },
   tagline: { marginTop: 4, marginBottom: 22, color: colors.darkText, fontSize: 15, textAlign: 'center' },
-  card: { width: '100%', padding: 22, borderRadius: 28, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.creamMuted, shadowColor: '#6B5840', shadowOpacity: 0.08, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 3 },
+  card: { width: '100%', padding: 22, borderRadius: 16, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.outline },
   headingRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   headingIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.mint },
   headingCopy: { flex: 1, gap: 3 },
   title: { color: colors.black, fontSize: 21, lineHeight: 28, fontWeight: '800' },
   subtitle: { color: colors.darkText, fontSize: 13, lineHeight: 19 },
-  modeSwitch: { flexDirection: 'row', marginTop: 22, marginBottom: 20, padding: 4, borderRadius: 18, backgroundColor: colors.creamMuted },
-  modeButton: { flex: 1, minHeight: 43, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  modeButtonActive: { backgroundColor: colors.yellow, shadowColor: '#B49300', shadowOpacity: 0.13, shadowRadius: 5, elevation: 1 },
+  modeSwitch: { flexDirection: 'row', marginTop: 22, marginBottom: 20, padding: 4, borderRadius: 10, backgroundColor: colors.creamMuted },
+  modeButton: { flex: 1, minHeight: 43, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
+  modeButtonActive: { backgroundColor: colors.highlight },
   modeText: { color: colors.darkText, fontSize: 15, fontWeight: '600' },
   modeTextActive: { color: colors.oliveDark, fontWeight: '800' },
   label: { marginTop: 13, marginBottom: 8, color: colors.darkText, fontSize: 14, fontWeight: '700' },
-  inputWrap: { minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: 11, paddingHorizontal: 15, borderRadius: 16, borderWidth: 1, borderColor: colors.outline, backgroundColor: colors.background },
+  inputWrap: { minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: 11, paddingHorizontal: 15, borderRadius: 10, borderWidth: 1, borderColor: colors.outline, backgroundColor: colors.background },
   input: { flex: 1, minHeight: 52, color: colors.black, fontSize: 15, outlineStyle: 'none' } as never,
   helper: { marginTop: 9, color: colors.darkText, fontSize: 12, lineHeight: 18 },
   error: { marginTop: 14, padding: 12, borderRadius: 12, overflow: 'hidden', backgroundColor: colors.blush, color: colors.burgundy, fontSize: 13, lineHeight: 19 },
-  submitButton: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 22, paddingHorizontal: 20, borderRadius: 18, backgroundColor: colors.yellow },
-  submitText: { color: colors.oliveDark, fontSize: 16, fontWeight: '800' },
+  submitButton: { minHeight: 54, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 22, paddingHorizontal: 20, borderRadius: 10, backgroundColor: colors.olive },
+  submitText: { color: colors.white, fontSize: 16, fontWeight: '700' },
   disabled: { opacity: 0.7 },
   pressed: { opacity: 0.72 },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 19 },

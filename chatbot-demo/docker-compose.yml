@@ -13,7 +13,7 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       STREAMLIT_SERVER_RUN_ON_SAVE: "true"
-      DEBUG_SIDEBAR: ${DEBUG_SIDEBAR:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DATABASE_URL: ${DATABASE_URL:-postgresql://capstone:capstone@db:5432/capstone}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-}
 
@@ -66,7 +66,7 @@ services:
       dockerfile: Dockerfile
     image: he-thong-ho-tro-cam-xuc:week1
     container_name: he-thong-ho-tro-cam-xuc-api
-    entrypoint: ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
+    entrypoint: ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "/app/src"]
     ports:
       - "8000:8000"
     environment:
@@ -75,6 +75,7 @@ services:
       API_CORS_ORIGINS: ${API_CORS_ORIGINS:-*}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-}
       DATABASE_URL: ${DATABASE_URL:-postgresql://capstone:capstone@db:5432/capstone}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
     volumes:
       - ./src:/app/src:ro
       - ./data:/app/data:ro

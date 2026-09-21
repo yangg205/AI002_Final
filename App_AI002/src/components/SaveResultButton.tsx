@@ -5,15 +5,18 @@ import { colors } from '../theme/colors';
 
 type SaveResultButtonProps = {
   readonly onPress: () => void;
+  readonly disabled?: boolean;
 };
 
-export function SaveResultButton({ onPress }: SaveResultButtonProps) {
+export function SaveResultButton({ onPress, disabled = false }: SaveResultButtonProps) {
   return (
     <Pressable
       accessibilityLabel="Lưu Kết Quả"
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.button, disabled && styles.disabled, pressed && styles.pressed]}
     >
       <Text style={styles.label}>Lưu Kết Quả</Text>
       <Ionicons color="#FFFFFF" name="arrow-forward" size={30} />
@@ -38,5 +41,8 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.72,
+  },
+  disabled: {
+    opacity: 0.55,
   },
 });

@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 
@@ -29,6 +30,7 @@ __all__ = [
 load_dotenv(dotenv_path=config.PROJECT_ROOT / ".env")
 
 _last_error = None
+_LOGGER = logging.getLogger(__name__)
 
 
 def last_error():
@@ -150,6 +152,7 @@ def reply(user_text: str, history=None) -> "tuple[str, str]":
         return content, "llm"
     except Exception as error:
         _last_error = "{name}: {msg}".format(name=type(error).__name__, msg=error)
+        _LOGGER.exception("LLM response generation failed; using scripted fallback")
         return scripted_reply(user_text), "scripted"
 
 
@@ -210,6 +213,7 @@ def classify_intent(text: str) -> str:
         _last_intent_error = "{name}: {msg}".format(
             name=type(error).__name__, msg=error
         )
+        _LOGGER.exception("LLM intent classification failed; using fallback intent")
         return config.INTENT_FALLBACK
 
 
@@ -275,6 +279,7 @@ def map_answer_to_likert(question_text: str, options, user_text: str):
             name=type(error).__name__, msg=error
         )
         _last_mapping_status = MAPPING_STATUS_ERROR
+        _LOGGER.exception("PSS answer mapping failed")
         return None
 
     score = payload.get("score", None)
@@ -354,6 +359,7 @@ def answer_with_context(question: str, hits, history=None) -> "tuple[str, str]":
         return content, "llm"
     except Exception as error:
         _last_error = "{name}: {msg}".format(name=type(error).__name__, msg=error)
+        _LOGGER.exception("LLM grounded answer failed; using retrieved text fallback")
         return _extractive_answer(hits), "extractive"
 
 

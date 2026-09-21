@@ -7,9 +7,14 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash   text NOT NULL,
     created_at      timestamptz NOT NULL DEFAULT now(),
     consent_at      timestamptz,
+    trusted_contact_name text,
+    trusted_contact_phone text,
     failed_attempts integer NOT NULL DEFAULT 0,
     locked_until    timestamptz
 );
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS trusted_contact_name text;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS trusted_contact_phone text;
 
 CREATE TABLE IF NOT EXISTS conversations (
     id         bigserial PRIMARY KEY,

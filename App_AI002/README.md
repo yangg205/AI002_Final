@@ -11,10 +11,12 @@ Chạy frontend:
 npm run web
 ```
 
-Mặc định web gọi API tại cùng hostname, cổng 8000. Để đổi địa chỉ, dùng nút
-**Cài đặt kết nối** trong tab **Tâm sự**, hoặc tạo `.env` từ `.env.example` và
-đặt `EXPO_PUBLIC_API_URL`. Khởi động lại Expo sau khi đổi biến môi trường.
-Địa chỉ chỉnh trong giao diện chỉ được giữ trong phiên hiện tại.
+Mặc định web gọi API tại cùng hostname, cổng 8000; Android emulator dùng
+`10.0.2.2`, còn iOS simulator dùng `localhost`. Điện thoại thật cần cùng Wi-Fi
+với máy chạy backend và dùng địa chỉ LAN của máy đó, ví dụ
+`http://192.168.1.10:8000`. Để đổi địa chỉ, dùng **Cài đặt kết nối** trong tab
+**Tâm sự**, hoặc đặt `EXPO_PUBLIC_API_URL` trong `.env` rồi khởi động lại Expo.
+Địa chỉ chỉnh trong giao diện được lưu theo tài khoản.
 
 ## Các luồng đã hoàn thiện
 
@@ -96,6 +98,7 @@ cd ../chatbot-demo
 uvicorn src.api:app --host 0.0.0.0 --port 8000
 ```
 
-Khi cần đổi địa chỉ API, đặt `EXPO_PUBLIC_API_URL` trong `.env` của frontend.
+Khi chạy trên điện thoại thật, đặt `EXPO_PUBLIC_API_URL` trong `.env` của
+frontend hoặc nhập địa chỉ LAN của máy backend tại **Cài đặt kết nối**.
 Hướng dẫn thở nhẹ tham khảo [NHS](https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/);
 số cấp cứu y tế Việt Nam tham khảo [GOV.UK](https://www.gov.uk/foreign-travel-advice/vietnam/health).

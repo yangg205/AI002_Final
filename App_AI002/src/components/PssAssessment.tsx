@@ -229,12 +229,18 @@ export function PssAssessment({ onClose, onNavigate }: PssAssessmentProps) {
                   </View>
                   <Text style={styles.body}>{result.explanation}</Text>
                   <Text style={styles.caption}>Kết quả phản ánh cảm nhận bạn vừa chia sẻ, không phải chẩn đoán sức khỏe tâm thần.</Text>
-                  {result.skills.length > 0 && (
-                    <View style={styles.noteCard}>
-                      <Text accessibilityRole="header" style={styles.sectionTitle}>Kỹ năng gợi ý cho bạn</Text>
-                      {result.skills.map((skill) => <Text key={skill.id} style={styles.body}>• {skill.title}</Text>)}
-                    </View>
-                  )}
+                  <View style={styles.noteCard}>
+                    <Text accessibilityRole="header" style={styles.sectionTitle}>Kỹ năng gợi ý cho bạn</Text>
+                    {result.skills.length > 0
+                      ? result.skills.map((skill) => (
+                        <View key={skill.id} style={styles.skill}>
+                          <Text accessibilityRole="header" style={styles.skillTitle}>• {skill.title}</Text>
+                          {skill.body ? <Text style={styles.body}>{skill.body}</Text> : <Text style={styles.caption}>Chưa tải được phần hướng dẫn của kỹ năng này.</Text>}
+                          {!!skill.source && <Text style={styles.source}>{skill.source}{skill.pages ? ` · trang ${skill.pages}` : ''}</Text>}
+                        </View>
+                      ))
+                      : <Text style={styles.caption}>Chưa tải được nội dung và nguồn WHO. Bạn có thể hỏi Joy về một kỹ năng trong khung chat.</Text>}
+                  </View>
                   {result.needs_support && (
                     <View style={styles.supportCard}>
                       <Text style={styles.body}>Bạn có thể cân nhắc chia sẻ với một người tin cậy hoặc chuyên gia tâm lý để được hỗ trợ thêm.</Text>
@@ -267,13 +273,16 @@ const styles = StyleSheet.create({
   scrollContent: { flexGrow: 1, padding: 24, paddingBottom: 40 },
   content: { width: '100%', maxWidth: 560, alignSelf: 'center' },
   stack: { gap: 16 },
-  title: { color: colors.black, fontSize: 30, lineHeight: 39, fontWeight: '800', letterSpacing: -0.7 },
+  title: { color: colors.black, fontSize: 28, lineHeight: 36, fontWeight: '700', letterSpacing: -0.4 },
   question: { color: colors.black, fontSize: 24, lineHeight: 34, fontWeight: '700' },
   body: { color: colors.darkText, fontSize: 17, lineHeight: 27 },
   caption: { color: colors.darkText, fontSize: 14, lineHeight: 22 },
-  noteCard: { backgroundColor: colors.cream, padding: 20, borderRadius: 22, gap: 12 },
-  supportCard: { backgroundColor: colors.blush, padding: 20, borderRadius: 22, gap: 16 },
-  button: { minHeight: 54, paddingVertical: 15, paddingHorizontal: 20, borderRadius: 28, backgroundColor: colors.olive, alignItems: 'center', justifyContent: 'center' },
+  noteCard: { backgroundColor: colors.cream, padding: 18, borderRadius: 14, gap: 16 },
+  skill: { gap: 7, paddingBottom: 14, borderBottomWidth: 1, borderBottomColor: colors.outline },
+  skillTitle: { color: colors.black, fontSize: 17, lineHeight: 24, fontWeight: '700' },
+  source: { color: colors.oliveDark, fontSize: 13, lineHeight: 20 },
+  supportCard: { backgroundColor: colors.blush, padding: 18, borderRadius: 14, gap: 16 },
+  button: { minHeight: 50, paddingVertical: 14, paddingHorizontal: 18, borderRadius: 12, backgroundColor: colors.olive, alignItems: 'center', justifyContent: 'center' },
   buttonText: { color: colors.white, fontSize: 16, lineHeight: 22, fontWeight: '700', textAlign: 'center' },
   secondaryButton: { backgroundColor: colors.cream },
   secondaryButtonText: { color: colors.darkText },
@@ -283,12 +292,12 @@ const styles = StyleSheet.create({
   error: { color: colors.burgundy, fontSize: 16, lineHeight: 24 },
   progressTrack: { height: 8, backgroundColor: colors.creamMuted, borderRadius: 4, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: colors.olive, borderRadius: 4 },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 60, padding: 16, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.outline, borderRadius: 18 },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 56, padding: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.outline, borderRadius: 12 },
   selectedOption: { borderColor: colors.olive, backgroundColor: colors.cream },
   optionText: { flex: 1, color: colors.darkText, fontSize: 16, lineHeight: 23 },
   radio: { height: 22, width: 22, borderRadius: 11, borderWidth: 2, borderColor: colors.outline },
   selectedRadio: { borderColor: colors.olive, borderWidth: 7 },
-  resultCard: { alignItems: 'center', padding: 30, borderRadius: 28, backgroundColor: colors.yellow, gap: 8 },
+  resultCard: { alignItems: 'center', padding: 24, borderRadius: 14, backgroundColor: colors.highlight, gap: 8 },
   score: { fontSize: 58, color: colors.black, fontWeight: '800' },
   scoreMaximum: { fontSize: 26, fontWeight: '500' },
   resultLevel: { color: colors.darkText, fontSize: 22, fontWeight: '700' },

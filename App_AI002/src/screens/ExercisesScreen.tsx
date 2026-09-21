@@ -1,10 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { LinearGradient } from 'expo-linear-gradient';
 import type { ComponentProps } from 'react';
 import { useEffect, useState } from 'react';
 import {
   AppState,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,12 +12,14 @@ import {
 } from 'react-native';
 
 import { colors } from '../theme/colors';
+import type { ExerciseRecommendationId } from '../services/moodCheckins';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
 type ExercisesScreenProps = {
   readonly active?: boolean;
   readonly onNotify: (text: string) => void;
+  readonly recommendationRequest?: { readonly id: number; readonly exerciseId: ExerciseRecommendationId } | null;
 };
 
 type Exercise = {
@@ -34,8 +34,6 @@ type Exercise = {
   readonly iconColor: string;
   readonly buttonColor: string;
   readonly activeBorder: string;
-  readonly gradient: readonly [string, string, ...string[]];
-  readonly illustration: number;
 };
 
 const exercises: readonly Exercise[] = [
@@ -49,12 +47,10 @@ const exercises: readonly Exercise[] = [
     instructions:
       'Ngồi thoải mái. Hít vào nhẹ qua mũi và thở ra qua miệng, không gắng sức. Nhịp đếm chỉ là gợi ý; bạn có thể thở tự nhiên hoặc dừng bất cứ lúc nào.',
     icon: 'leaf-outline',
-    iconBackground: '#77EA91',
-    iconColor: '#087A32',
-    buttonColor: '#087A32',
-    activeBorder: '#42B96A',
-    gradient: ['#F8F5E9', '#E8F5DF', '#DDF5E8'],
-    illustration: require('../../assets/illustrations/exercise-breathing.png'),
+    iconBackground: colors.mint,
+    iconColor: colors.olive,
+    buttonColor: colors.olive,
+    activeBorder: colors.olive,
   },
   {
     id: 'music',
@@ -66,12 +62,10 @@ const exercises: readonly Exercise[] = [
     instructions:
       'Mở bản nhạc bạn thích trong ứng dụng nghe nhạc trước khi bắt đầu, với âm lượng dễ chịu. JoyfulMind chỉ đếm thời gian, không phát nhạc. Chú ý đến những âm thanh bạn nghe thấy.',
     icon: 'headset-outline',
-    iconBackground: '#FFD92A',
-    iconColor: '#625300',
-    buttonColor: '#766300',
-    activeBorder: '#C7A900',
-    gradient: ['#FFF9E9', '#FFF1CC', '#FFF5DF'],
-    illustration: require('../../assets/illustrations/exercise-music.png'),
+    iconBackground: colors.cream,
+    iconColor: colors.olive,
+    buttonColor: colors.olive,
+    activeBorder: colors.olive,
   },
   {
     id: 'dance',
@@ -83,12 +77,10 @@ const exercises: readonly Exercise[] = [
     instructions:
       'Chọn một khoảng trống an toàn và tự mở nhạc nếu muốn. Bắt đầu bằng những chuyển động nhẹ, có thể ngồi hoặc đứng. Nghỉ hoặc dừng khi thấy không thoải mái.',
     icon: 'sparkles-outline',
-    iconBackground: '#F78CB2',
-    iconColor: '#8E244D',
-    buttonColor: '#A42D58',
-    activeBorder: '#D7658F',
-    gradient: ['#FFF7EE', '#FFE9EC', '#FFE1EA'],
-    illustration: require('../../assets/illustrations/exercise-dance.png'),
+    iconBackground: colors.cream,
+    iconColor: colors.olive,
+    buttonColor: colors.olive,
+    activeBorder: colors.olive,
   },
 ] as const;
 
@@ -106,7 +98,7 @@ const feedbackOptions = [
 type ExerciseId = Exercise['id'];
 type FeedbackId = (typeof feedbackOptions)[number]['id'];
 
-export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProps) {
+export function ExercisesScreen({ active = true, onNotify, recommendationRequest }: ExercisesScreenProps) {
   const { width } = useWindowDimensions();
   const compact = width < 360;
   const [activeExerciseId, setActiveExerciseId] =
@@ -119,6 +111,17 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
   useEffect(() => {
     if (!active) setRunning(false);
   }, [active]);
+
+  useEffect(() => {
+    if (!recommendationRequest) return;
+    const recommended = exercises.find((item) => item.id === recommendationRequest.exerciseId);
+    if (!recommended) return;
+    setActiveExerciseId(recommended.id);
+    setRemainingSeconds(recommended.durationSeconds);
+    setSelectedFeedback(null);
+    setRunning(false);
+    onNotify(`Joy gợi ý ${recommended.title} từ lần đo stress gần nhất. Bấm bắt đầu khi bạn sẵn sàng.`);
+  }, [recommendationRequest, onNotify]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -152,7 +155,7 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
       return;
     }
 
-    const resuming = activeExerciseId === exercise.id && remainingSeconds > 0;
+    const resuming = activeExerciseId === exercise.id && remainingSeconds > 0 && remainingSeconds < exercise.durationSeconds;
     if (!resuming) {
       setRemainingSeconds(exercise.durationSeconds);
       setSelectedFeedback(null);
@@ -190,18 +193,27 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
       >
         <View accessible accessibilityLabel="Thư giãn cùng JoyfulMind" style={styles.eyebrow}>
           <Ionicons color={colors.burgundy} name="flower-outline" size={16} />
-          <Text style={styles.eyebrowText}>Thư giãn cùng JoyfulMind</Text>
+          <Text style={styles.eyebrowText}>Bài tập thư giãn</Text>
         </View>
 
         <Text
           accessibilityRole="header"
           style={[styles.title, compact && styles.compactTitle]}
         >
-          Gợi ý bài tập{`\n`}thư giãn
+          Bài tập thư giãn
         </Text>
         <Text style={styles.subtitle}>
           Dành vài phút cho bản thân. Bộ đếm sẽ tạm dừng khi bạn rời màn hình hoặc chuyển ứng dụng.
         </Text>
+
+        {recommendationRequest && activeExerciseId === recommendationRequest.exerciseId && (
+          <View style={styles.recommendationBanner}>
+            <Ionicons name="sparkles-outline" size={19} color={colors.oliveDark} />
+            <Text style={styles.recommendationText}>
+              Bài này được gợi ý theo lần đo stress tự cảm nhận gần nhất. Bạn có thể chọn bài khác nếu muốn.
+            </Text>
+          </View>
+        )}
 
         <View accessibilityLabel="Danh sách bài tập thư giãn" style={styles.exerciseList}>
           {exercises.map((exercise) => {
@@ -214,14 +226,11 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
             const breathPhase = elapsedSeconds % 10;
 
             return (
-              <LinearGradient
-                colors={exercise.gradient}
-                end={{ x: 1, y: 1 }}
+              <View
                 key={exercise.id}
-                start={{ x: 0, y: 0 }}
                 style={[
                   styles.exerciseCard,
-                  { borderColor: selected ? exercise.activeBorder : 'transparent' },
+                  { borderColor: selected ? exercise.activeBorder : colors.outline },
                   compact && styles.compactCard,
                 ]}
               >
@@ -250,21 +259,12 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
                 </Text>
                 <Text style={styles.cardDescription}>{exercise.description}</Text>
 
-                <View style={styles.artworkFrame}>
-                  <Image
-                    accessible={false}
-                    resizeMode="cover"
-                    source={exercise.illustration}
-                    style={styles.artwork}
-                  />
-                </View>
-
                 <Text style={styles.instructions}>{exercise.instructions}</Text>
 
                 {selected && (
                   <View style={styles.timerPanel}>
                     <Text style={styles.timerStatus}>
-                      {completed ? 'Hoàn thành' : isRunning ? 'Đang thực hiện' : 'Đã tạm dừng'}
+                      {completed ? 'Hoàn thành' : isRunning ? 'Đang thực hiện' : started ? 'Đã tạm dừng' : 'Sẵn sàng'}
                     </Text>
                     <Text
                       accessibilityLabel={`Thời gian còn lại: ${Math.floor(remainingSeconds / 60)} phút ${remainingSeconds % 60} giây`}
@@ -320,7 +320,7 @@ export function ExercisesScreen({ active = true, onNotify }: ExercisesScreenProp
                     {actionLabel}
                   </Text>
                 </Pressable>
-              </LinearGradient>
+              </View>
             );
           })}
         </View>
@@ -403,24 +403,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     paddingVertical: 7,
     borderRadius: 18,
-    backgroundColor: '#FFE2E8',
+    backgroundColor: colors.cream,
   },
   eyebrowText: {
-    color: '#74384E',
+    color: colors.oliveDark,
     fontSize: 13,
     fontWeight: '600',
     lineHeight: 18,
   },
   title: {
     marginTop: 18,
-    color: '#625300',
-    fontSize: 36,
-    fontWeight: '800',
-    letterSpacing: -1,
-    lineHeight: 40,
+    color: colors.black,
+    fontSize: 30,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    lineHeight: 38,
   },
   compactTitle: {
-    fontSize: 31,
+    fontSize: 28,
     lineHeight: 35,
   },
   subtitle: {
@@ -430,6 +430,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
   },
+  recommendationBanner: {
+    marginTop: 18,
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 12,
+    backgroundColor: colors.mint,
+  },
+  recommendationText: { flex: 1, color: colors.oliveDark, fontSize: 14, lineHeight: 21 },
   exerciseList: {
     marginTop: 28,
     gap: 24,
@@ -437,17 +447,13 @@ const styles = StyleSheet.create({
   exerciseCard: {
     overflow: 'hidden',
     padding: 18,
-    borderWidth: 2,
-    borderRadius: 30,
-    shadowColor: '#6E5C2D',
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.07,
-    shadowRadius: 15,
-    elevation: 3,
+    borderWidth: 1,
+    borderRadius: 14,
+    backgroundColor: colors.white,
   },
   compactCard: {
     padding: 16,
-    borderRadius: 26,
+    borderRadius: 14,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -465,24 +471,24 @@ const styles = StyleSheet.create({
     minHeight: 31,
     justifyContent: 'center',
     paddingHorizontal: 12,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.78)',
+    borderRadius: 8,
+    backgroundColor: colors.cream,
   },
   durationText: {
-    color: '#5C554B',
+    color: colors.darkText,
     fontSize: 13,
     fontWeight: '600',
   },
   cardTitle: {
     marginTop: 18,
-    color: '#17140F',
+    color: colors.black,
     fontSize: 19,
-    fontWeight: '800',
+    fontWeight: '700',
     lineHeight: 24,
   },
   cardDescription: {
     marginTop: 6,
-    color: '#4B453D',
+    color: colors.darkText,
     fontSize: 15,
     lineHeight: 22,
   },
@@ -507,18 +513,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 9,
-    borderRadius: 25,
+    borderRadius: 10,
   },
   instructions: {
     marginTop: 12,
-    color: '#4B453D',
+    color: colors.darkText,
     fontSize: 14,
     lineHeight: 22,
   },
   timerPanel: {
     marginTop: 16,
     padding: 16,
-    borderRadius: 20,
+    borderRadius: 12,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
   },
@@ -534,7 +540,7 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     marginTop: 34,
-    color: '#17140F',
+    color: colors.black,
     fontSize: 17,
     fontWeight: '700',
     lineHeight: 23,
@@ -552,13 +558,13 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 17,
     borderWidth: 1.5,
-    borderColor: '#D9D0C2',
-    borderRadius: 24,
-    backgroundColor: '#FFFDF8',
+    borderColor: colors.outline,
+    borderRadius: 10,
+    backgroundColor: colors.white,
   },
   selectedFeedbackChip: {
-    borderColor: colors.burgundy,
-    backgroundColor: '#FFE6ED',
+    borderColor: colors.olive,
+    backgroundColor: colors.cream,
   },
   feedbackText: {
     color: colors.darkText,

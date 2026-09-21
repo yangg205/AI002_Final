@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../theme/colors';
 
@@ -12,15 +12,7 @@ type AppHeaderProps = {
 export function AppHeader({ onBellPress, accountLabel, onAccountPress }: AppHeaderProps) {
   return (
     <View style={styles.container}>
-      <View style={styles.logoFrame}>
-        <Image
-          accessibilityLabel="Linh vật JoyfulMind"
-          accessible
-          resizeMode="contain"
-          source={require('../../assets/illustrations/joy-mascot.png')}
-          style={styles.logoImage}
-        />
-      </View>
+      <View style={styles.logoFrame}><Ionicons color={colors.olive} name="leaf-outline" size={22} /></View>
 
       <Text style={styles.title}>JoyfulMind</Text>
 
@@ -32,7 +24,7 @@ export function AppHeader({ onBellPress, accountLabel, onAccountPress }: AppHead
           onPress={onAccountPress}
           style={styles.accountButton}
         >
-          <Ionicons color="#625300" name={accountLabel ? 'person-circle-outline' : 'log-in-outline'} size={26} />
+          <Ionicons color={colors.olive} name={accountLabel ? 'person-circle-outline' : 'log-in-outline'} size={23} />
         </Pressable>
       )}
 
@@ -43,7 +35,7 @@ export function AppHeader({ onBellPress, accountLabel, onAccountPress }: AppHead
         onPress={onBellPress}
         style={({ pressed }) => [styles.bellButton, pressed && styles.pressed]}
       >
-        <Ionicons name="heart-circle-outline" color="#625300" size={30} />
+        <Ionicons name="help-circle-outline" color={colors.olive} size={25} />
       </Pressable>
     </View>
   );
@@ -51,45 +43,37 @@ export function AppHeader({ onBellPress, accountLabel, onAccountPress }: AppHead
 
 const styles = StyleSheet.create({
   container: {
-    height: 78,
+    height: 66,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.navigationBackground,
-    shadowColor: '#7B6500',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.outline,
     zIndex: 2,
   },
   logoFrame: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF0B9',
-    overflow: 'hidden',
-  },
-  logoImage: {
-    width: 46,
-    height: 46,
+    backgroundColor: colors.cream,
   },
   title: {
     flex: 1,
-    marginLeft: 12,
-    color: '#625300',
-    fontSize: 27,
-    fontWeight: '800',
-    letterSpacing: -0.6,
+    marginLeft: 10,
+    color: colors.black,
+    fontSize: 22,
+    fontWeight: '700',
+    letterSpacing: -0.3,
   },
   bellButton: {
     width: 48,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 24,
+    borderRadius: 12,
   },
   accountButton: {
     width: 42,

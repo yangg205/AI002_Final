@@ -39,9 +39,9 @@ export function MoodCard({ mood, selected, onPress }: MoodCardProps) {
         testID={`mood-${mood.id}`}
       >
         <View
-          style={[styles.iconCircle, { backgroundColor: mood.color }]}
+          style={[styles.iconCircle, { backgroundColor: colors.cream }]}
         >
-          <Ionicons color={mood.iconColor} name={mood.icon} size={43} />
+          <Ionicons color={colors.olive} name={mood.icon} size={32} />
         </View>
         <Text style={styles.label}>{mood.label}</Text>
 
@@ -58,7 +58,7 @@ export function MoodCard({ mood, selected, onPress }: MoodCardProps) {
 const styles = StyleSheet.create({
   wrapper: {
     width: '47.6%',
-    aspectRatio: 1.18,
+    aspectRatio: 1.4,
     overflow: 'visible',
   },
   card: {
@@ -66,47 +66,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'visible',
-    borderRadius: 43,
-    borderWidth: 2.5,
-    borderColor: 'transparent',
-    backgroundColor: colors.cream,
-    shadowColor: '#7B6500',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 2,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.outline,
+    backgroundColor: colors.white,
   },
   selectedCard: {
-    borderColor: colors.burgundy,
-    backgroundColor: '#FFE5EB',
+    borderColor: colors.olive,
+    backgroundColor: colors.cream,
   },
   pressedCard: {
     opacity: 0.78,
   },
   iconCircle: {
-    width: 78,
-    height: 78,
-    borderRadius: 39,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     alignItems: 'center',
     justifyContent: 'center',
   },
   label: {
-    marginTop: 11,
+    marginTop: 7,
     paddingHorizontal: 7,
-    color: '#17140F',
-    fontSize: 16,
+    color: colors.black,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
   },
   checkBadge: {
     position: 'absolute',
-    top: -10,
-    right: -8,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.burgundy,
+    backgroundColor: colors.olive,
   },
 });
