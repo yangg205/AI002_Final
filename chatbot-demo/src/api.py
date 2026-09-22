@@ -330,7 +330,7 @@ def health() -> dict:
         "status": "ok",
         "engine": "chatbot-demo",
         "ai_available": llm.is_available(),
-        "rag_available": bool(rag_engine.gemini_api_key()),
+        "rag_available": bool(rag_engine.gemini_api_key()) and rag_engine.collection_count() > 0,
     }
 
 
@@ -396,13 +396,14 @@ def chat(request: ChatRequest, user: dict | None = Depends(optional_current_user
         logger.exception("chat pipeline failed during intent or response generation user_id=%s", user.get("id") if user else None)
         raise HTTPException(status_code=503, detail="Joy chưa tạo được phản hồi lúc này. Bạn thử lại sau nhé.") from error
     source = result.get("reply_source")
-    mode = (
-        "rag"
-        if source == "rag"
-        else "scripted"
-        if source in {"fallback", "meta"}
-        else "ai"
-    )
+    if source == "rag_error":
+        mode = "unavailable"
+    elif source in {"rag", "llm", "extractive"} and (result.get("retrieval") or {}).get("hits"):
+        mode = "rag"
+    elif source in {"fallback", "meta", "scripted", "out_of_scope"}:
+        mode = "scripted"
+    else:
+        mode = "ai"
     sources = []
     for hit in (result.get("retrieval") or {}).get("hits", []):
         pages = hit.get("pages") or []

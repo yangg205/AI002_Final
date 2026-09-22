@@ -135,7 +135,7 @@ export function AuthScreen({ onAuthenticated, onContinueAsGuest }: AuthScreenPro
                 maxLength={32}
                 onChangeText={setUsername}
                 onSubmitEditing={submit}
-                placeholder="Ví dụ: minhnguyen"
+                placeholder="Nhập tên đăng nhập"
                 placeholderTextColor="#82796F"
                 returnKeyType="next"
                 style={styles.input}

@@ -203,3 +203,13 @@
 {"id": "intent-0079", "kind": "intent", "label": "meta", "split": "train", "text": "mình muốn biết ai chịu trách nhiệm nếu có sự cố"}
 {"id": "intent-0080", "kind": "intent", "label": "meta", "split": "dev", "text": "bạn được huấn luyện từ nguồn nào"}
 {"id": "intent-0081", "kind": "intent", "label": "meta", "split": "train", "text": "bạn có thể cho tôi 1 số cách giảm căng thẳng chứ"}
+{"id": "intent-0082", "kind": "intent", "label": "advice", "split": "train", "text": "Nghe nhạc vui tại sao lại thư giản"}
+{"id": "intent-0083", "kind": "intent", "label": "advice", "split": "train", "text": "Vì sao nghe bài hát mình thích có thể giúp thư giãn?"}
+{"id": "intent-0084", "kind": "intent", "label": "advice", "split": "train", "text": "Có bằng chứng nào nghe nhạc giúp giảm stress không?"}
+{"id": "intent-0085", "kind": "intent", "label": "advice", "split": "train", "text": "Hướng dẫn mình tập nghe nhạc để nghỉ ngơi sau giờ học"}
+{"id": "intent-0086", "kind": "intent", "label": "advice", "split": "train", "text": "Vậy còn nhảy theo nhạc thì sao?"}
+{"id": "intent-0087", "kind": "intent", "label": "advice", "split": "train", "text": "Nhảy theo nhạc có cơ sở gì để giúp bớt căng thẳng?"}
+{"id": "intent-0088", "kind": "intent", "label": "advice", "split": "train", "text": "Không biết nhảy thì tập chuyển động theo nhạc thế nào?"}
+{"id": "intent-0089", "kind": "intent", "label": "advice", "split": "train", "text": "Nghe nhạc 5 phút hay nhảy 10 phút có chắc sẽ thư giãn không?"}
+{"id": "intent-0090", "kind": "intent", "label": "advice", "split": "train", "text": "nghe nhac vui tai sao lai thu gian"}
+{"id": "intent-0091", "kind": "intent", "label": "advice", "split": "train", "text": "vay con nhay theo nhac giup giam stress nhu the nao"}

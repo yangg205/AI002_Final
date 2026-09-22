@@ -22,12 +22,15 @@ COPY src/ ./src/
 COPY data/ ./data/
 COPY tools/ ./tools/
 COPY entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
+RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh \
+    && test -s ./entrypoint.sh
 
 RUN useradd --create-home --uid 10001 appuser \
     && mkdir -p /app/vector_store \
     && chown -R appuser:appuser /app
-USER appuser
+RUN test -s /etc/passwd && test -s /app/entrypoint.sh \
+    && test -s /app/tools/initialize_indexes.py
+USER 10001:10001
 
 EXPOSE 8501
 

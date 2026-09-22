@@ -23,6 +23,13 @@ chmod 777 vector_store eval    # only if the container hits permission errors
 
 The same compose file also starts the frontend API at `http://localhost:8000`:
 
+The `init-indexes` service prepares the WHO and kNN collections in the shared
+volume before either interface starts, including when starting only `api`.
+If initialization fails, inspect `docker compose logs init-indexes`, correct
+the reported configuration/network error, then run `docker compose up -d` again.
+The API health check uses port 8000; `rag_available` requires a nonempty WHO
+collection as well as the Gemini key.
+
 ```bash
 curl http://localhost:8000/api/health
 curl -X POST http://localhost:8000/api/chat \
@@ -69,6 +76,24 @@ curl http://localhost:8000/api/auth/me \
   -H 'Authorization: Bearer <access_token>'
 ```
 
+## Browse the database
+
+Adminer starts with `docker compose up -d` and restarts automatically with Docker.
+To start just the database and Adminer web interface:
+
+```bash
+docker compose up -d adminer
+```
+
+Open http://localhost:8080 and choose **PostgreSQL**. Use server `db`,
+username from `POSTGRES_USER`, password from `POSTGRES_PASSWORD`, and database
+from `POSTGRES_DB` in `.env` (default username and database: `capstone`).
+Click a table, then **Select data** to view saved rows.
+Use `db` (port `5432`) inside Adminer; `localhost:5433` is for database clients
+running directly on Windows, and `http://localhost:8080` is the Adminer web page.
+The interface is available only on your local machine. Stop it with
+`docker compose stop adminer`.
+
 ## Run without Docker
 
 Requires Python 3.10+.
@@ -88,14 +113,28 @@ streamlit run src/app.py
 
 Skipping the two index commands leaves the advice flow without WHO passages and
 **silently disables guardrail layer 1b**. The app shows a short user-facing
-notice; the technical reason is written to the terminal. The Docker entrypoint
-runs both indexes for you; a manual run does not.
+notice; the technical reason is written to the terminal. Docker Compose runs
+both indexes through `init-indexes` before starting the chat services; a manual
+run does not.
 
 ```bash
 streamlit run src/app.py --server.port 8502
 ```
 
 ## Build and inspect the RAG index
+
+The existing WHO PDF and kNN JSONL schema are preserved. Additional reading on
+music and dancing lives in `data/relaxation_documents.jsonl`, with NCCIH/WHO URLs
+kept in retrieval metadata and displayed in chat citations. The 5/10-minute
+exercise timers are app suggestions, not clinically validated treatment doses.
+After adding documents or training examples, refresh both indexes:
+
+```bash
+docker compose exec api python tools/initialize_indexes.py
+```
+
+The document manifest includes the supplemental file hash, so normal startup
+also detects additions. This updates retrieval and intent examples, not LLM weights.
 
 ```bash
 python3 tools/index_documents.py                  # index if needed

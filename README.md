@@ -25,6 +25,7 @@ docker compose logs -f app api
 ```
 
 Lần chạy đầu có thể mất thêm thời gian để tải image và tạo chỉ mục tài liệu.
+DB <http://localhost:8080>
 Backend API ở <http://localhost:8000>; tài liệu API ở
 <http://localhost:8000/docs>. Giao diện Streamlit tùy chọn ở
 <http://localhost:8501>.

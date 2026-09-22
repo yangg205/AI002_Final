@@ -7,6 +7,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 PSS10_QUESTIONS_PATH = DATA_DIR / "pss10_questions.csv"
 CRISIS_RESOURCES_PATH = DATA_DIR / "crisis_resources.json"
 DWM_PDF_PATH = DATA_DIR / "who_dwm_vi.pdf"
+SUPPLEMENTAL_DOCUMENTS_PATH = DATA_DIR / "relaxation_documents.jsonl"
 
 VECTOR_STORE_DIR = PROJECT_ROOT / "vector_store"
 

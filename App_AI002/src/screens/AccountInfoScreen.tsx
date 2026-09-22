@@ -105,13 +105,13 @@ export function AccountInfoScreen({ user, onLogout, onBack, accessToken, onUserC
             </View>
           </View>
           <Text style={styles.teamDescription}>
-            JoyfulMind được xây dựng như một không gian hỗ trợ chia sẻ cảm xúc và chăm sóc sức khỏe tinh thần.
+            Dự án được phát triển bởi các sinh viên UIT trong môn AI002
           </Text>
           <View style={styles.creditRow}>
             <Ionicons color={colors.olive} name="code-slash-outline" size={18} />
             <Text style={styles.credit}>Nhóm phát triển JoyfulMind</Text>
           </View>
-          <Text style={styles.teamNote}>Thông tin thành viên cụ thể chưa được cung cấp trong ứng dụng.</Text>
+          <Text style={styles.teamNote}>{'Nguyễn Võ Anh Tú – 26410317\nNguyễn Xuân Kiên – 26410229\nNguyễn Chí Bảo – 26410169\nTrần Phúc Hậu – 26410207\nVõ Văn Giang – 26410202'}</Text>
         </View>
 
         <Pressable accessibilityRole="button" onPress={onLogout} style={({ pressed }) => [styles.logout, pressed && styles.pressed]}>

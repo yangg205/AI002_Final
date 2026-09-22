@@ -312,7 +312,7 @@ def _format_context(hits) -> str:
     parts = []
     for index, hit in enumerate(hits, start=1):
         pages = hit.get("pages") or []
-        label = "trang " + ", ".join(str(p) for p in pages)
+        label = (hit.get("source_title") or "trang " + ", ".join(str(p) for p in pages))
         parts.append(
             "[Đoạn {index} - {skill}, {label}]\n{text}".format(
                 index=index,

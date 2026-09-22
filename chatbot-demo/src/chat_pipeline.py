@@ -124,7 +124,13 @@ def answer_from_documents(
 def format_citation(outcome: dict) -> str:
     hits = outcome.get("hits") or []
     parts = []
+    external_sources = []
     for hit in hits:
+        if hit.get("source_url"):
+            citation = "[{0}]({1})".format(hit.get("source_title") or "Tài liệu bổ sung", hit["source_url"])
+            if citation not in external_sources:
+                external_sources.append(citation)
+            continue
         pages = hit.get("pages") or []
         if not pages:
             continue
@@ -139,8 +145,8 @@ def format_citation(outcome: dict) -> str:
                 pages=pages_label,
             )
         )
-    if not parts:
-        return ""
-    return "{prefix}: {body}".format(
+    who_citation = "{prefix}: {body}".format(
         prefix=config.RAG_CITATION_PREFIX_VI, body="; ".join(parts)
-    )
+    ) if parts else ""
+    external_citation = "Nguồn bổ sung: " + "; ".join(external_sources) if external_sources else ""
+    return "\n".join(part for part in (who_citation, external_citation) if part)

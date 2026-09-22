@@ -146,6 +146,8 @@ def build_chunks(pages=None) -> "list[dict]":
             }
         )
 
+    with open(config.SUPPLEMENTAL_DOCUMENTS_PATH, encoding="utf-8") as handle:
+        chunks.extend(json.loads(line) for line in handle if line.strip())
     return chunks
 
 
@@ -302,6 +304,7 @@ def _pdf_fingerprint(path: Path) -> str:
 def _expected_manifest() -> dict:
     return {
         "pdf_sha256": _pdf_fingerprint(Path(config.DWM_PDF_PATH)),
+        "supplemental_sha256": _pdf_fingerprint(Path(config.SUPPLEMENTAL_DOCUMENTS_PATH)),
         "embed_model": config.GEMINI_EMBED_MODEL,
         "embed_dimensions": config.GEMINI_EMBED_DIMENSIONS,
         "collection": config.CHROMA_COLLECTION_NAME,
@@ -412,6 +415,8 @@ def index_if_needed(force: bool = False, progress=None) -> dict:
                 "skill": c["skill"],
                 "pages": ",".join(str(p) for p in c["pages"]),
                 "kind": c["kind"],
+                "source_title": c.get("source_title", ""),
+                "source_url": c.get("source_url", ""),
             }
             for c in chunks
         ],
@@ -474,6 +479,8 @@ def retrieve(query: str, k: int = None) -> "list[dict]":
                 "skill": metadata.get("skill"),
                 "pages": pages,
                 "kind": metadata.get("kind"),
+                "source_title": metadata.get("source_title", ""),
+                "source_url": metadata.get("source_url", ""),
                 "score": 1.0 - float(distance),
             }
         )

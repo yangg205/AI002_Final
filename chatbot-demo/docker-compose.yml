@@ -1,4 +1,20 @@
 services:
+  init-indexes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: he-thong-ho-tro-cam-xuc:week1
+    entrypoint: ["python", "tools/initialize_indexes.py"]
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    volumes:
+      - ./src:/app/src:ro
+      - ./data:/app/data:ro
+      - chroma_data:/app/vector_store
+    healthcheck:
+      disable: true
+    restart: "no"
+
   app:
     build:
       context: .
@@ -24,6 +40,8 @@ services:
       - ./eval:/app/eval
 
     depends_on:
+      init-indexes:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
 
@@ -60,6 +78,17 @@ services:
       start_period: 10s
       retries: 10
 
+  adminer:
+    image: adminer:5
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
   api:
     build:
       context: .
@@ -81,7 +110,15 @@ services:
       - ./data:/app/data:ro
       - chroma_data:/app/vector_store
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
     depends_on:
+      init-indexes:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
 
